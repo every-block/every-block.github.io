@@ -158,7 +158,7 @@ export function TopBlocksHBar({ allVotes, blocks, defaultN = 20 }: Props) {
       .map(finalize)
       .sort((a, b) => a.count - b.count || (a.name < b.name ? -1 : 1))
       .slice(0, n);
-  }, [slice.count, n, mode, blocks, group]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [slice.count, n, mode, blocks, group]);
 
   const maxCount = ranked.reduce((m, e) => (e.count > m ? e.count : m), 0) || 1;
   const totalHeight = n * (ROW_HEIGHT + ROW_GAP);

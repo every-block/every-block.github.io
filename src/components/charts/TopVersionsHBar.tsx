@@ -80,7 +80,7 @@ export function TopVersionsHBar({ allVotes, blocks }: Props) {
         };
       })
       .sort((a, b) => b.value - a.value);
-  }, [slice.count, normalize, blocksPerVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [slice.count, normalize, blocksPerVersion]);
 
   const maxValue = ranked.length ? ranked[0].value : 1;
   const totalHeight = ranked.length * (ROW_HEIGHT + ROW_GAP);
@@ -88,7 +88,7 @@ export function TopVersionsHBar({ allVotes, blocks }: Props) {
   const formatCount = (entry: (typeof ranked)[number]) => {
     if (!normalize || entry.blocksInVersion === 0) return String(entry.count);
     const ratio = entry.count / entry.blocksInVersion;
-    return `${ratio.toFixed(1)}  ${entry.count}/${entry.blocksInVersion}`;
+    return `${ratio.toFixed(1)} (${entry.count}/${entry.blocksInVersion})`;
   };
 
   return (
