@@ -296,7 +296,7 @@ body,
 }
 
 .chart-card-subtle {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   color: #888;
 }
@@ -306,7 +306,7 @@ body,
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding-right: 6px;
+  padding-bottom: 6px;
 }
 
 .chart-card-header .chart-card-title {

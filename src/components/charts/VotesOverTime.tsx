@@ -117,7 +117,7 @@ export function VotesOverTime({
         votes over time
         <span className="chart-card-subtle">
           {" "}
-          · rolling {formatDuration(windowMs)} window
+          - rolling {formatDuration(windowMs)} window
         </span>
       </div>
       <div className="vot-plot-wrap">
