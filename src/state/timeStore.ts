@@ -12,7 +12,6 @@ export interface TimeState {
   currentTime: number;
   isPlaying: boolean;
   speed: Speed;
-  minSaturation: number;
 
   setRange: (startTime: number, endTime: number) => void;
   setCurrentTime: (t: number) => void;
@@ -32,7 +31,6 @@ export const useTimeStore = create<TimeState>((set) => ({
   currentTime: 0,
   isPlaying: false,
   speed: 1,
-  minSaturation: 0.15,
 
   setRange: (startTime, endTime) =>
     set(() => ({

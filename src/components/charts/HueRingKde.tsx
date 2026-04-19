@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
 import type { Block, Rgb, Vote } from "../../data/types";
 import { useVotesUpTo } from "../../state/useVotesUpTo";
-import { useTimeStore } from "../../state/timeStore";
+import { useSaturationStore } from "../../state/saturationStore";
 import { useNormalizeStore } from "../../state/normalizeStore";
 import { useGroupStore } from "../../state/groupStore";
 import { hsvToCss, rgbToCss, rgbToHsv } from "../../lib/color";
@@ -41,7 +41,8 @@ const BASE_DENSITY_FLOOR_FRAC = 0.01;
 
 export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
   const slice = useVotesUpTo(allVotes);
-  const minSat = useTimeStore((s) => s.minSaturation);
+  const minSat = useSaturationStore((s) => s.minSaturation);
+  const setMinSaturation = useSaturationStore((s) => s.setMinSaturation);
   const normalize = useNormalizeStore((s) => s.normalize);
   const group = useGroupStore((s) => s.group);
   const [mode, setMode] = useState<SourceMode>("votes");
@@ -397,6 +398,22 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
         >
           BASE
         </button>
+      </div>
+      <div className="hue-ring-sat-filter" title="Hide blocks below this HSV saturation">
+        <label className="hue-ring-sat-label" htmlFor="hue-ring-min-sat">
+          MIN SAT
+        </label>
+        <input
+          id="hue-ring-min-sat"
+          className="hue-ring-sat-slider"
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={minSat}
+          onChange={(e) => setMinSaturation(Number(e.target.value))}
+        />
+        <span className="hue-ring-sat-value">{minSat.toFixed(2)}</span>
       </div>
       <PlotlyChart data={data} layout={layout} style={{ width: "100%", height: "100%" }} />
     </div>
