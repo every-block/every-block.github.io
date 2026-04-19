@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
 import type { Vote } from "../../data/types";
+import { EVENTS, type TimelineEvent } from "../../data/events";
 import { useTimeStore } from "../../state/timeStore";
 import { useVotesUpTo } from "../../state/useVotesUpTo";
 import { PlotlyChart } from "./PlotlyChart";
@@ -13,6 +14,8 @@ interface Props {
 
 const LINE_COLOR = "#2563eb";
 const FILL_COLOR = "rgba(37, 99, 235, 0.18)";
+
+const MARGIN = { l: 44, r: 12, t: 8, b: 40 } as const;
 
 export function VotesOverTime({
   allVotes,
@@ -67,7 +70,7 @@ export function VotesOverTime({
       showlegend: false,
     };
     const layout: Partial<Layout> = {
-      margin: { l: 44, r: 12, t: 8, b: 40 },
+      margin: { ...MARGIN },
       xaxis: {
         type: "date",
         range: [new Date(startTime), new Date(endTime)],
@@ -103,6 +106,11 @@ export function VotesOverTime({
     return { data: [trace], layout };
   }, [xs, ys, startTime, endTime, currentTime, windowMs]);
 
+  const visibleEvents: TimelineEvent[] =
+    span > 0
+      ? EVENTS.filter((e) => e.timestamp >= startTime && e.timestamp <= endTime)
+      : [];
+
   return (
     <div className="chart-card vot-card">
       <div className="chart-card-title">
@@ -112,13 +120,69 @@ export function VotesOverTime({
           · rolling {formatDuration(windowMs)} window
         </span>
       </div>
-      <PlotlyChart
-        data={data}
-        layout={layout}
-        style={{ width: "100%", height: "100%" }}
-      />
+      <div className="vot-plot-wrap">
+        <PlotlyChart
+          data={data}
+          layout={layout}
+          style={{ width: "100%", height: "100%" }}
+        />
+        {visibleEvents.length > 0 && (
+          <div
+            className="vot-flag-layer"
+            style={
+              {
+                "--vot-margin-l": `${MARGIN.l}px`,
+                "--vot-margin-r": `${MARGIN.r}px`,
+                "--vot-margin-t": `${MARGIN.t}px`,
+                "--vot-margin-b": `${MARGIN.b}px`,
+              } as React.CSSProperties
+            }
+            aria-hidden={false}
+          >
+            {visibleEvents.map((ev) => {
+              const pct = (ev.timestamp - startTime) / span;
+              const align =
+                pct > 0.85 ? "right" : pct < 0.15 ? "left" : "center";
+              return (
+                <div
+                  key={`${ev.timestamp}-${ev.label}`}
+                  className={`vot-flag vot-flag-align-${align}`}
+                  style={{ "--pct": pct } as React.CSSProperties}
+                  tabIndex={0}
+                  role="img"
+                  aria-label={`${ev.label}: ${ev.description}`}
+                >
+                  <span className="vot-flag-line" />
+                  <span className="vot-flag-hit" />
+                  <span className="vot-flag-tooltip" role="tooltip">
+                    <span className="vot-flag-tooltip-title">{ev.label}</span>
+                    <span className="vot-flag-tooltip-time">
+                      {fmtTimestamp(ev.timestamp)}
+                    </span>
+                    <span className="vot-flag-tooltip-desc">
+                      {ev.description}
+                    </span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
+}
+
+function fmtTimestamp(t: number): string {
+  if (!Number.isFinite(t)) return "—";
+  return new Date(t).toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
 function formatDuration(ms: number): string {

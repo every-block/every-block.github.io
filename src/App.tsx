@@ -16,6 +16,7 @@ import { StatsTab } from "./components/tabs/StatsTab";
 import { ColorsTab } from "./components/tabs/ColorsTab";
 import { LogisticsTab } from "./components/tabs/LogisticsTab";
 import { cleanVersion } from "./lib/versionEpoch";
+import { EVENTS } from "./data/events";
 import type { Block } from "./data/types";
 
 const EMPTY_VOTES: Vote[] = [];
@@ -28,6 +29,7 @@ export function App() {
   const [imageVersion, setImageVersion] = useState(0);
   const [activeTab, setActiveTab] = useState<TabId>("stats");
   const setRange = useTimeStore((s) => s.setRange);
+  const setCurrentTime = useTimeStore((s) => s.setCurrentTime);
   const excludedVersions = useFilterStore((s) => s.excludedVersions);
 
   usePlaybackLoop();
@@ -39,6 +41,13 @@ export function App() {
         if (cancelled) return;
         setBundle(b);
         setRange(b.startTime, b.endTime);
+        const def = EVENTS.find(
+          (e) =>
+            e.default === true &&
+            e.timestamp >= b.startTime &&
+            e.timestamp <= b.endTime,
+        );
+        if (def) setCurrentTime(def.timestamp);
         preloadImages(b.blocks, () => {
           setImageVersion((v) => v + 1);
         });
@@ -53,7 +62,7 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, [setRange]);
+  }, [setRange, setCurrentTime]);
 
   const filteredVotes = useMemo<Vote[]>(() => {
     if (!bundle) return EMPTY_VOTES;

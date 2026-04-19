@@ -55,7 +55,8 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         title={isPlaying ? "Pause" : "Play"}
         aria-label={isPlaying ? "Pause" : "Play"}
       >
-        {isPlaying ? "⏸" : "▶"}
+        {isPlaying ? "⏸" : "⯈"}
+   
       </button>
 
       <div className="scrubber-time">
