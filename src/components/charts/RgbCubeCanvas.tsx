@@ -297,11 +297,7 @@ export function RgbCubeCanvas({
       const py = e.clientY - rect.top;
       updateHover(px, py);
     };
-    const onPointerUp = (e: PointerEvent) => {
-      try {
-        canvas.releasePointerCapture(e.pointerId);
-      } catch {
-      }
+    const onPointerUp = (_: PointerEvent) => {
       dragRef.current = null;
     };
     const onWheel = (e: WheelEvent) => {
@@ -389,13 +385,13 @@ export function RgbCubeCanvas({
           >
             <div className="cube-tooltip-name">{hoverState.entity.name}</div>
             <div className="cube-tooltip-meta">
-              {hoverState.entity.votes} vote{hoverState.entity.votes === 1 ? "" : "s"} ·
+              {hoverState.entity.votes} vote{hoverState.entity.votes === 1 ? "" : "s"} -
               rgb({hoverState.entity.rgb.join(", ")})
             </div>
           </div>
         )}
       </div>
-      <div className="cube-hint">drag to orbit · scroll to zoom</div>
+      <div className="cube-hint">drag to orbit - scroll to zoom</div>
     </div>
   );
 }
