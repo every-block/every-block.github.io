@@ -1,8 +1,6 @@
 // vote-name remapping applied while loading responses
 export const VOTE_REMAP: Readonly<Record<string, string>> = {
   "Waxed Block of Copper": "Block of Copper",
-  "Weathered Copper": "Block of Copper",
-  "Weathered Chiseled Copper": "Block of Copper",
   "Waxed Cut Copper": "Cut Copper",
   "Waxed Cut Copper Slab": "Cut Copper Slab",
   "Waxed Cut Copper Stairs": "Cut Copper Stairs",
