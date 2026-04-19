@@ -230,7 +230,7 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
     });
     const dotColor = items.map((i) => i.rgbCss);
     const dotText = items.map(
-      (i) => `${i.name} · ${i.count} vote${i.count === 1 ? "" : "s"} · ${i.hueDeg.toFixed(0)}°`,
+      (i) => `${i.name} - ${i.count} vote${i.count === 1 ? "" : "s"} - ${i.hueDeg.toFixed(0)}°`,
     );
 
     const dotTrace: Data = {
@@ -253,8 +253,8 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
     const layout: Partial<Layout> = {
       title: {
         text: normalize
-          ? "gaussian KDE / hue ring (vs base distribution)"
-          : "gaussian KDE / hue ring",
+          ? "Gaussian KDE / hue ring (vs base distribution)"
+          : "Gaussian KDE / hue ring",
         font: { size: 14 },
       },
       margin: { l: 20, r: 20, t: 36, b: 20 },

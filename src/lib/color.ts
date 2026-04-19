@@ -5,7 +5,7 @@ export function rgbToCss([r, g, b]: Rgb, alpha = 1): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-/** RGB (0..255) -> HSV with H in degrees [0, 360), S and V in [0, 1] */
+// RGB (0..255) -> HSV with H in degrees [0, 360), S and V in [0, 1]
 export function rgbToHsv([r, g, b]: Rgb): { h: number; s: number; v: number } {
   const rn = r / 255;
   const gn = g / 255;
@@ -25,7 +25,7 @@ export function rgbToHsv([r, g, b]: Rgb): { h: number; s: number; v: number } {
   return { h, s, v: max };
 }
 
-/** HSV (H deg, S/V in [0,1]) -> RGB (0..255) */
+// HSV (H deg, S/V in [0,1]) -> RGB (0..255)
 export function hsvToRgb(h: number, s: number, v: number): Rgb {
   const c = v * s;
   const hp = (((h % 360) + 360) % 360) / 60;

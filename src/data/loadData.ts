@@ -283,9 +283,6 @@ export async function loadData(): Promise<DataBundle> {
   const startTime = votes.length ? votes[0].timestamp : Date.now();
   const endTime = votes.length ? votes[votes.length - 1].timestamp : Date.now();
 
-  // stamp blocks with .groupKey/.groupName and build the lookup maps used
-  // by the GROUP toggle. runs once at boot; throws if any block ends up
-  // double-claimed by two rules (see blockGroups.ts)
   const groupClassifier = buildGroupClassifier(blocks);
 
   return {

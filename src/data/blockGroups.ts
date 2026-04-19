@@ -456,12 +456,6 @@ export interface GroupClassifier {
   groupMembersByKey: Map<string, Block[]>;
 }
 
-// cross-references the GROUP_RULES table against the loaded blocks list
-// mutates each member block in place to attach `groupKey` / `groupName`
-// pointers, and returns lookup maps for the synthetic group identities
-// throws loudly during dev if any block ends up assigned to two groups
-// this catches drift the moment a future edit accidentally double-claims a
-// block, rather than silently misrouting votes in production
 export function buildGroupClassifier(blocks: Block[]): GroupClassifier {
   const blockByKey = new Map<string, Block>();
   for (const b of blocks) blockByKey.set(b.key, b);
@@ -482,8 +476,7 @@ export function buildGroupClassifier(blocks: Block[]): GroupClassifier {
       if (existing && existing !== rule.key) {
         throw new Error(
           `Block "${block.name}" claimed by two groups: ` +
-            `"${groupNameByKey.get(existing) ?? existing}" and "${rule.name}". ` +
-            `Reorder GROUP_RULES so the more specific group is listed first.`,
+            `"${groupNameByKey.get(existing) ?? existing}" and "${rule.name}". `
         );
       }
 
