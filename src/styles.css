@@ -504,7 +504,7 @@ body,
 .app-footer {
   background: white;
   border-top: 1px solid #e5e5e5;
-  padding: 26px 14px 8px;
+  padding: 16px;
   position: sticky;
   bottom: 0;
 }
