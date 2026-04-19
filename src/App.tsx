@@ -22,6 +22,13 @@ import type { Block } from "./data/types";
 const EMPTY_VOTES: Vote[] = [];
 const EMPTY_BLOCKS: Block[] = [];
 
+const PYRO_QUOTES: readonly string[] = [
+  "t-distributed Stochastic Neighbor Embeddings saved my life!",
+  "I might be the mayor of density",
+  "My grandma was a Treemap",
+  "Founder of Blockheed Martin Corp",
+];
+
 export function App() {
   const [bundle, setBundle] = useState<DataBundle | null>(null);
   const [buildInfo, setBuildInfo] = useState<BuildInfo | null>(null);
@@ -31,6 +38,14 @@ export function App() {
   const setRange = useTimeStore((s) => s.setRange);
   const setCurrentTime = useTimeStore((s) => s.setCurrentTime);
   const excludedVersions = useFilterStore((s) => s.excludedVersions);
+
+  const [pyroQuote, setPyroQuote] = useState(() => PYRO_QUOTES[0]);
+  const rerollPyroQuote = () => {
+    setPyroQuote((current) => {
+      const pool = PYRO_QUOTES.filter((q) => q !== current);
+      return pool[Math.floor(Math.random() * pool.length)] ?? current;
+    });
+  };
 
   usePlaybackLoop();
 
@@ -86,10 +101,42 @@ export function App() {
         <div className="app-header-titles">
           <h1>Is Every Block Someone's Favorite?</h1>
           <p className="app-subtitle">
-            A Minecraft survey by Pyroscythe
+            A Minecraft survey by{" "}
+            <span
+              className="pyro"
+              onMouseEnter={rerollPyroQuote}
+              onFocus={rerollPyroQuote}
+            >
+              <a
+                href="https://twitch.tv/pyroscythe"
+                className="pyro-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pyroscythe
+              </a>
+              <span className="pyro-tooltip" role="tooltip">
+                <img
+                  className="pyro-tooltip-avatar"
+                  src="https://static-cdn.jtvnw.net/jtv_user_pictures/608f9be7-2606-4d9b-821e-f700b7440a82-profile_image-70x70.png"
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+                <span className="pyro-tooltip-quote">{pyroQuote}</span>
+              </span>
+            </span>
           </p>
         </div>
         <div className="app-header-controls">
+          <a
+            href="https://forms.gle/VxQmxgHRhSGEvcYi6"
+            className="vote-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CAST YOUR VOTE!
+          </a>
           <LastRefreshedIndicator buildInfo={buildInfo} />
           <NormalizeToggle />
           <GroupToggle />
