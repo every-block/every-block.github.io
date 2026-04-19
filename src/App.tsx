@@ -128,7 +128,7 @@ export function App() {
             </span>
           </p>
         </div>
-        <div className="app-header-controls">
+        <div className="app-header-links">
           <a
             href="https://forms.gle/VxQmxgHRhSGEvcYi6"
             className="vote-btn"
@@ -137,6 +137,8 @@ export function App() {
           >
             CAST YOUR VOTE!
           </a>
+        </div>
+        <div className="app-header-controls">
           <LastRefreshedIndicator buildInfo={buildInfo} />
           <NormalizeToggle />
           <GroupToggle />
