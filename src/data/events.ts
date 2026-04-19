@@ -11,13 +11,23 @@ export interface TimelineEvent {
 export const EVENTS: readonly TimelineEvent[] = [
   {
     timestamp: new Date("2026-04-06T19:58:19Z").getTime(),
-    label: "Data collection begins",
-    description: "Data collection begins.",
+    label: "Begin",
+    description: "Data collection begins",
+  },
+  {
+    timestamp: new Date("2026-04-07T19:30:00Z").getTime(),
+    label: "Reel #1",
+    description: "Reel #1 advertising the form posted on Instagram",
+  },
+  {
+    timestamp: new Date("2026-04-16T00:10:00Z").getTime(),
+    label: "Reel #2",
+    description: "Reel #2 advertising the form posted on Instagram",
   },
   {
     timestamp: new Date("2026-04-19T03:30:12Z").getTime(),
     label: "Video data collection ends",
-    description: "Video data collection ends.",
+    description: "Data collection for video stops here",
     default: true,
     stop: true
   }
