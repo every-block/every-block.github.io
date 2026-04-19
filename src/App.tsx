@@ -18,16 +18,10 @@ import { LogisticsTab } from "./components/tabs/LogisticsTab";
 import { cleanVersion } from "./lib/versionEpoch";
 import { EVENTS } from "./data/events";
 import type { Block } from "./data/types";
+import { PYRO_QUOTES } from "./data/quotes";
 
 const EMPTY_VOTES: Vote[] = [];
 const EMPTY_BLOCKS: Block[] = [];
-
-const PYRO_QUOTES: readonly string[] = [
-  "t-distributed Stochastic Neighbor Embeddings saved my life!",
-  "I might be the mayor of density",
-  "My grandma was a Treemap",
-  "Founder of Blockheed Martin Corp",
-];
 
 export function App() {
   const [bundle, setBundle] = useState<DataBundle | null>(null);
