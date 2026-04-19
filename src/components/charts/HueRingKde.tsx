@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
 import type { Block, Rgb, Vote } from "../../data/types";
 import { useVotesUpTo } from "../../state/useVotesUpTo";
@@ -22,6 +22,18 @@ interface Props {
   n?: number;
 }
 
+type SourceMode = "votes" | "base";
+
+interface RingItem {
+  key: string;
+  name: string;
+  hueDeg: number;
+  hueRad: number;
+  rgbCss: string;
+  count: number;
+  isGroup: boolean;
+}
+
 const INNER_R = 0.45;
 const OUTER_R = 0.9;
 const SCATTER_OFFSET = 0.06;
@@ -32,12 +44,16 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
   const minSat = useTimeStore((s) => s.minSaturation);
   const normalize = useNormalizeStore((s) => s.normalize);
   const group = useGroupStore((s) => s.group);
+  const [mode, setMode] = useState<SourceMode>("votes");
 
-  const baseDensity = useMemo(() => {
+  const effectiveMode: SourceMode = normalize ? "votes" : mode;
+
+  const baseInfo = useMemo(() => {
     const bwRad = (bwDeg * Math.PI) / 180;
+    const items: RingItem[] = [];
     const huesRad: number[] = [];
     if (group) {
-      type Accum = { r: number; g: number; b: number; n: number };
+      type Accum = { r: number; g: number; b: number; n: number; name: string; key: string };
       const groups = new Map<string, Accum>();
       const ungrouped: Block[] = [];
       for (const b of blocks) {
@@ -54,6 +70,8 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
               g: b.rgb[1],
               b: b.rgb[2],
               n: 1,
+              name: b.groupName ?? b.name,
+              key: b.groupKey,
             });
           }
         } else {
@@ -68,38 +86,73 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
         ];
         const hsv = rgbToHsv(rgb);
         if (hsv.s < minSat) continue;
-        huesRad.push((hsv.h * Math.PI) / 180);
+        const hueRad = (hsv.h * Math.PI) / 180;
+        huesRad.push(hueRad);
+        items.push({
+          key: a.key,
+          name: a.name,
+          hueDeg: hsv.h,
+          hueRad,
+          rgbCss: rgbToCss(rgb),
+          count: a.n,
+          isGroup: true,
+        });
       }
       for (const b of ungrouped) {
         const hsv = rgbToHsv(b.rgb);
         if (hsv.s < minSat) continue;
-        huesRad.push((hsv.h * Math.PI) / 180);
+        const hueRad = (hsv.h * Math.PI) / 180;
+        huesRad.push(hueRad);
+        items.push({
+          key: b.key,
+          name: b.name,
+          hueDeg: hsv.h,
+          hueRad,
+          rgbCss: rgbToCss(b.rgb),
+          count: 1,
+          isGroup: false,
+        });
       }
     } else {
       for (const b of blocks) {
         const hsv = rgbToHsv(b.rgb);
         if (hsv.s < minSat) continue;
-        huesRad.push((hsv.h * Math.PI) / 180);
+        const hueRad = (hsv.h * Math.PI) / 180;
+        huesRad.push(hueRad);
+        items.push({
+          key: b.key,
+          name: b.name,
+          hueDeg: hsv.h,
+          hueRad,
+          rgbCss: rgbToCss(b.rgb),
+          count: 1,
+          isGroup: false,
+        });
       }
     }
-    return circularKde(huesRad, bwRad, n).density;
+    const { grid, density } = circularKde(huesRad, bwRad, n);
+    return { items, density, grid };
   }, [blocks, minSat, bwDeg, n, group]);
 
-  const { data, layout } = useMemo(() => {
-    type Item = {
+  const voteInfo = useMemo(() => {
+    type Accum = {
       key: string;
       name: string;
       rSum: number;
       gSum: number;
       bSum: number;
       count: number;
+      isGroup: boolean;
     };
-    const byEntity = new Map<string, Item>();
+    const byEntity = new Map<string, Accum>();
     for (const v of slice.votes) {
       const hsv = rgbToHsv(v.block.rgb);
       if (hsv.s < minSat) continue;
-      const id = group && v.block.groupKey ? v.block.groupKey : v.block.key;
-      const nm = group && v.block.groupName ? v.block.groupName : v.block.name;
+      const isGroup = group && !!v.block.groupKey;
+      const id = isGroup ? (v.block.groupKey as string) : v.block.key;
+      const nm = isGroup
+        ? (v.block.groupName ?? v.block.name)
+        : v.block.name;
       const [r, g, b] = v.block.rgb;
       const existing = byEntity.get(id);
       if (existing) {
@@ -115,18 +168,11 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
           gSum: g,
           bSum: b,
           count: 1,
+          isGroup,
         });
       }
     }
-    type ResolvedItem = {
-      key: string;
-      name: string;
-      hueDeg: number;
-      hueRad: number;
-      rgbCss: string;
-      count: number;
-    };
-    const items: ResolvedItem[] = [];
+    const items: RingItem[] = [];
     for (const it of byEntity.values()) {
       const rgb: Rgb = [
         Math.round(it.rSum / it.count),
@@ -141,18 +187,20 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
         hueRad: (hsv.h * Math.PI) / 180,
         rgbCss: rgbToCss(rgb),
         count: it.count,
+        isGroup: it.isGroup,
       });
     }
-
     const bwRad = (bwDeg * Math.PI) / 180;
     const huesRad = items.map((i) => i.hueRad);
     const weights = items.map((i) => i.count);
-    const { grid, density: voteDensity } = weightedCircularKde(
-      huesRad,
-      weights,
-      bwRad,
-      n,
-    );
+    const { grid, density } = weightedCircularKde(huesRad, weights, bwRad, n);
+    return { items, density, grid };
+  }, [slice.count, minSat, bwDeg, n, group]);
+
+  const { data, layout } = useMemo(() => {
+    const baseDensity = baseInfo.density;
+    const voteDensity = voteInfo.density;
+    const grid = voteInfo.grid;
 
     let plotDensity: Float64Array;
     if (normalize && baseDensity.length === voteDensity.length) {
@@ -166,6 +214,8 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
         const denom = Math.max(baseDensity[i], floor);
         plotDensity[i] = voteDensity[i] / denom;
       }
+    } else if (effectiveMode === "base") {
+      plotDensity = baseDensity;
     } else {
       plotDensity = voteDensity;
     }
@@ -223,15 +273,24 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
       showlegend: false,
     };
 
-    const dotTheta = items.map((i) => i.hueDeg);
-    const dotR = items.map((i) => {
+    const dotItems = effectiveMode === "base" ? baseInfo.items : voteInfo.items;
+    const dotTheta = dotItems.map((i) => i.hueDeg);
+    const dotR = dotItems.map((i) => {
       const idx = searchsorted(grid, i.hueRad);
       return rScaled[idx] + SCATTER_OFFSET;
     });
-    const dotColor = items.map((i) => i.rgbCss);
-    const dotText = items.map(
-      (i) => `${i.name} - ${i.count} vote${i.count === 1 ? "" : "s"} - ${i.hueDeg.toFixed(0)}°`,
-    );
+    const dotColor = dotItems.map((i) => i.rgbCss);
+    const dotText =
+      effectiveMode === "base"
+        ? dotItems.map((i) =>
+            i.isGroup
+              ? `${i.name} - ${i.count} variant${i.count === 1 ? "" : "s"} - ${i.hueDeg.toFixed(0)}°`
+              : `${i.name} - ${i.hueDeg.toFixed(0)}°`,
+          )
+        : dotItems.map(
+            (i) =>
+              `${i.name} - ${i.count} vote${i.count === 1 ? "" : "s"} - ${i.hueDeg.toFixed(0)}°`,
+          );
 
     const dotTrace: Data = {
       type: "scatterpolar",
@@ -250,11 +309,21 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
 
     const data: Data[] = [wedgeTrace, ringTrace, dotTrace];
 
+    const titleText = normalize
+      ? "Gaussian KDE / hue ring (votes ÷ base)"
+      : effectiveMode === "base"
+        ? "Gaussian KDE / hue ring (base distribution)"
+        : "Gaussian KDE / hue ring (vote distribution)";
+
+    const annotationText = normalize
+      ? "radius → votes ÷ base"
+      : effectiveMode === "base"
+        ? "radius → base density"
+        : "radius → vote density";
+
     const layout: Partial<Layout> = {
       title: {
-        text: normalize
-          ? "Gaussian KDE / hue ring (vs base distribution)"
-          : "Gaussian KDE / hue ring",
+        text: titleText,
         font: { size: 14 },
       },
       margin: { l: 20, r: 20, t: 36, b: 20 },
@@ -273,7 +342,7 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
       showlegend: false,
       annotations: [
         {
-          text: normalize ? "radius → votes ÷ base" : "radius → density",
+          text: annotationText,
           x: 0.5,
           y: 0.5,
           xref: "paper",
@@ -285,10 +354,10 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
     };
 
     return { data, layout };
-  }, [slice.count, minSat, bwDeg, n, normalize, baseDensity, group]);
+  }, [voteInfo, baseInfo, normalize, effectiveMode, n, group]);
 
   return (
-    <div className="chart-card">
+    <div className="chart-card hue-ring-card">
       {normalize && (
         <NormalizedBadge
           description="The vote-density at each hue is divided by the dataset's natural hue density (one weight-1 sample per block, or per group when GROUP is also on). Radii now show how much each hue overperformed its share of the block list, rather than absolute popularity."
@@ -297,6 +366,38 @@ export function HueRingKde({ allVotes, blocks, bwDeg = 12, n = 720 }: Props) {
       {group && (
         <GroupedBadge description="Each dot/wedge represents a canonical group rather than an individual block. The group's hue is the vote-weighted RGB average of its members up to the cursor, so it drifts as different variants accumulate votes." />
       )}
+      <div className="hue-ring-source-toggle" role="tablist" aria-label="density source">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={effectiveMode === "votes"}
+          className={`hue-ring-source-button${effectiveMode === "votes" ? " is-active" : ""}`}
+          onClick={() => setMode("votes")}
+          disabled={normalize}
+          title={
+            normalize
+              ? "Normalized mode shows VOTES ÷ BASE"
+              : "Show density of incoming votes"
+          }
+        >
+          VOTES
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={effectiveMode === "base"}
+          className={`hue-ring-source-button${effectiveMode === "base" ? " is-active" : ""}`}
+          onClick={() => setMode("base")}
+          disabled={normalize}
+          title={
+            normalize
+              ? "Normalized mode shows VOTES ÷ BASE"
+              : "Show the natural hue distribution of the block list"
+          }
+        >
+          BASE
+        </button>
+      </div>
       <PlotlyChart data={data} layout={layout} style={{ width: "100%", height: "100%" }} />
     </div>
   );

@@ -510,6 +510,52 @@ body,
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
+.hue-ring-card {
+  position: relative;
+}
+
+.hue-ring-source-toggle {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 4;
+  display: inline-flex;
+  background: rgba(241, 241, 243, 0.92);
+  border: 1px solid #e3e3e6;
+  border-radius: 6px;
+  padding: 2px;
+  backdrop-filter: blur(2px);
+}
+
+.hue-ring-source-button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: #777;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.hue-ring-source-button:hover:not(.is-active):not(:disabled) {
+  color: #333;
+}
+
+.hue-ring-source-button.is-active {
+  background: white;
+  color: #1f1f1f;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.hue-ring-source-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .vhist-card,
 .vot-card {
   padding: 8px 8px 4px;
