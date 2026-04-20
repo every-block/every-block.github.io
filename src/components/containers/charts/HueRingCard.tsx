@@ -216,11 +216,6 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
   );
 
   const mode: HueRingMode = normalize ? "normalized" : localMode;
-  const title = normalize
-    ? "Gaussian KDE / hue ring (votes ÷ base)"
-    : mode === "base"
-      ? "Gaussian KDE / hue ring (base distribution)"
-      : "Gaussian KDE / hue ring (vote distribution)";
 
   const badge = (
     <>
@@ -261,7 +256,6 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
       baseItems={baseItems}
       mode={mode}
       onModeChange={(m) => setLocalMode(m)}
-      title={title}
       itemsLabel="VOTES"
       baseLabel="BASE"
       badge={badge}

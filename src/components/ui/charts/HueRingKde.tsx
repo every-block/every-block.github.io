@@ -14,7 +14,7 @@ interface Props {
   baseItems?: HuePoint[];
   mode: HueRingMode;
   onModeChange?: (mode: HueRingMode) => void;
-  title: string;
+  title?: string;
   itemsLabel?: string;
   baseLabel?: string;
   badge?: ReactNode;
