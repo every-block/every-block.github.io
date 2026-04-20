@@ -3,9 +3,11 @@ export type Rgb = readonly [number, number, number];
 export interface Block {
   name: string;
   key: string;
+  id: string;
   version: string;
   rgb: Rgb;
   imageUrl: string;
+  imageFrameHeight?: number;
   image: HTMLImageElement | null | false;
   groupKey?: string;
   groupName?: string;

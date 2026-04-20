@@ -2,6 +2,7 @@ import Papa from "papaparse";
 import type { Block, DataBundle, Response, Rgb, Vote } from "@/types/domain";
 import { VOTE_REMAP_BY_KEY } from "@/data/vote-remap";
 import { buildGroupClassifier } from "@/data/block-groups";
+import { loadItemSpriteManifest } from "@/utils/item-sprites";
 
 const RESPONSES_URL = "/data/responses.csv";
 const BLOCKS_URL = "/data/blocks.csv";
@@ -17,6 +18,7 @@ const RESPONSE_BLOCK_KEYS = [
 ];
 
 const BLOCK_NAME_KEYS = ["name", "block", "block name", "item"];
+const BLOCK_ID_KEYS = ["id", "block id", "identifier"];
 const BLOCK_VERSION_KEYS = [
   "full version",
   "version",
@@ -137,10 +139,12 @@ function parseBlocks(rows: Record<string, unknown>[]): Block[] {
       console.warn(`block "${name}" has no parseable rgb; defaulting to gray`);
       rgb = [128, 128, 128];
     }
+    const id = pick(row, BLOCK_ID_KEYS).trim();
     const imageUrl = pick(row, BLOCK_IMAGE_KEYS).trim();
     out.push({
       name,
       key,
+      id,
       version,
       rgb,
       imageUrl,
@@ -259,6 +263,19 @@ export async function loadData(): Promise<DataBundle> {
   const blocks = allBlocks.filter((b) => !VOTE_REMAP_BY_KEY.has(b.key));
   const blockByKey = new Map<string, Block>();
   for (const b of blocks) blockByKey.set(b.key, b);
+
+  try {
+    const spriteManifest = await loadItemSpriteManifest();
+    for (const b of blocks) {
+      if (!b.id) continue;
+      const entry = spriteManifest.get(b.id);
+      if (!entry) continue;
+      b.imageUrl = `/${entry.path}`;
+      if (entry.frameHeight !== undefined) b.imageFrameHeight = entry.frameHeight;
+    }
+  } catch (err) {
+    console.warn("failed to load item sprite manifest; falling back to swatches", err);
+  }
 
   const responses = parseResponses(responseRows);
 
