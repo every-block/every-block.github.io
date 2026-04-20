@@ -111,7 +111,7 @@ export const GROUP_RULES: readonly GroupRule[] = [
   },
   {
     key: "group:red-nether-bricks",
-    name: "Red Nether Bricks",
+    name: "Red Nether Brick",
     members: [
       "Red Nether Bricks",
       "Red Nether Brick Slab",

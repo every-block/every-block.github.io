@@ -31,16 +31,14 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
   const [materialsOnly, setMaterialsOnly] = useState(false);
 
   const items = useMemo<SeriesItem[]>(() => {
-    const groupView = group || materialsOnly;
-    const idOf = (b: Block) =>
-      groupView && b.groupKey ? b.groupKey : b.key;
+   const idOf = (b: Block) => (group && b.groupKey ? b.groupKey : b.key);
     const nameOf = (b: Block) =>
-      groupView && b.groupName ? b.groupName : b.name;
+      group && b.groupName ? b.groupName : b.name;
     const includes = (b: Block) => !materialsOnly || !!b.groupKey;
 
     const counts = new Map<string, Accum>();
     if (mode === "bottom") {
-      if (groupView) {
+      if (group) {
         type Seed = { name: string; r: number; g: number; b: number; count: number };
         const seeds = new Map<string, Seed>();
         for (const bk of blocks) {
@@ -134,7 +132,13 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
     return out.slice(0, n);
   }, [slice.count, n, mode, blocks, group, materialsOnly]);
 
-  const noun = materialsOnly ? "materials" : group ? "entries" : "blocks";
+  const noun = materialsOnly
+    ? group
+      ? "materials"
+      : "material blocks"
+    : group
+      ? "entries"
+      : "blocks";
   const title = `${mode === "top" ? "top" : "bottom"} ${n} ${noun}`;
 
   return (
@@ -154,7 +158,7 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
           onChange={setMaterialsOnly}
           label="MATERIALS"
           tone="yellow"
-          title="Show only the top-level material groups (e.g. Stone, Oak, Cobblestone)"
+          title="Restrict to blocks that belong to a defined material group (e.g. Stone, Oak, Cobblestone). Combine with GROUPED to collapse members into their top-level group."
         />
       }
       badge={
