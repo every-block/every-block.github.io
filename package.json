@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "bun run build:sprites && vite",
+    "build": "bun run build:sprites && tsc -b && vite build",
     "preview": "vite preview",
     "start": "bun run build && bun run preview",
-    "fetch:data": "bun scripts/fetch-data.ts"
+    "fetch:data": "bun scripts/fetch-data.ts",
+    "build:sprites": "bun scripts/build-item-sprites.ts",
+    "build:sprites:force": "bun scripts/build-item-sprites.ts --force"
   },
   "dependencies": {
     "papaparse": "^5.4.1",
