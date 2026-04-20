@@ -74,37 +74,189 @@ body,
   font-weight: 600;
 }
 
-.vote-btn {
+.ui-link-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
   border-radius: 6px;
-  background: #673ab7; /* google forms purple */
-  color: #fff;
-  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-decoration: none;
   line-height: 1.4;
-  box-shadow: 0 1px 2px rgba(103, 58, 183, 0.25);
-  transition: background 0.15s ease, box-shadow 0.15s ease,
-    transform 0.05s ease;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.05s ease;
 }
 
-.vote-btn:hover {
+.ui-link-button:not(.is-disabled):active {
+  transform: translateY(1px);
+}
+
+.ui-link-button.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+  filter: saturate(0.6);
+}
+
+.ui-link-button--sm {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.ui-link-button--md {
+  padding: 12px 16px;
+  font-size: 12px;
+}
+
+.ui-link-button--lg {
+  padding: 14px 20px;
+  font-size: 14px;
+}
+
+.ui-link-button--purple {
+  background: #673ab7; /* google forms purple */
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(103, 58, 183, 0.25);
+}
+
+.ui-link-button--purple:not(.is-disabled):hover {
   background: #5b32a3;
   box-shadow: 0 2px 6px rgba(103, 58, 183, 0.35);
 }
 
-.vote-btn:active {
-  transform: translateY(1px);
+.ui-link-button--purple:not(.is-disabled):active {
   box-shadow: 0 1px 2px rgba(103, 58, 183, 0.25);
 }
 
-.vote-btn:focus-visible {
+.ui-link-button--purple:not(.is-disabled):focus-visible {
   outline: 2px solid #b39ddb;
   outline-offset: 2px;
+}
+
+.ui-link-button--red {
+  background: #ff0000; /* youtube red */
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(255, 0, 0, 0.25);
+}
+
+.ui-link-button--red:not(.is-disabled):hover {
+  background: #cc0000;
+  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.35);
+}
+
+.ui-link-button--red:not(.is-disabled):active {
+  box-shadow: 0 1px 2px rgba(255, 0, 0, 0.25);
+}
+
+.ui-link-button--red:not(.is-disabled):focus-visible {
+  outline: 2px solid #ff9999;
+  outline-offset: 2px;
+}
+
+.ui-link-button--neutral {
+  background: #fff;
+  color: #333;
+  border: 1px solid #d6d6d9;
+}
+
+.ui-link-button--neutral:not(.is-disabled):hover {
+  border-color: #b8b8bd;
+}
+
+.ui-link-button--neutral:not(.is-disabled):focus-visible {
+  outline: 2px solid #b8b8bd;
+  outline-offset: 2px;
+}
+
+.ui-link-button-sparkles {
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ui-link-button-sparkle {
+  position: absolute;
+  color: #ffd700;
+  line-height: 1;
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.75));
+  animation: ui-link-button-sparkle-twinkle 1.8s ease-in-out infinite;
+}
+
+.ui-link-button-sparkle::before {
+  content: "✦";
+  display: block;
+}
+
+.ui-link-button-sparkle:nth-child(1) {
+  top: 8%;
+  left: 6%;
+  font-size: 10px;
+  animation-delay: 0s;
+}
+
+.ui-link-button-sparkle:nth-child(2) {
+  top: 62%;
+  left: 18%;
+  font-size: 8px;
+  animation-delay: 0.3s;
+}
+
+.ui-link-button-sparkle:nth-child(3) {
+  top: -4px;
+  left: 44%;
+  font-size: 12px;
+  animation-delay: 0.9s;
+}
+
+.ui-link-button-sparkle:nth-child(4) {
+  top: 38%;
+  left: 70%;
+  font-size: 9px;
+  animation-delay: 0.6s;
+}
+
+.ui-link-button-sparkle:nth-child(5) {
+  bottom: 4%;
+  right: 8%;
+  font-size: 11px;
+  animation-delay: 1.2s;
+}
+
+.ui-link-button-sparkle:nth-child(6) {
+  top: 14%;
+  right: -4px;
+  font-size: 9px;
+  animation-delay: 1.5s;
+}
+
+@keyframes ui-link-button-sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  45%,
+  55% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-link-button-sparkle {
+    animation: none;
+    opacity: 0.85;
+    transform: scale(1);
+  }
+}
+
+.ui-link-button.is-disabled .ui-link-button-sparkles {
+  display: none;
 }
 
 .app-subtitle {

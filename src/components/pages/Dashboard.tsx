@@ -4,6 +4,7 @@ import type { Block, DataBundle, Vote } from "@/types/domain";
 import { TimeScrubber } from "@/containers/TimeScrubber";
 import { BlockFilter } from "@/containers/BlockFilter";
 import { VersionFilter } from "@/containers/VersionFilter";
+import { LinkButton } from "@/ui/LinkButton";
 import { NormalizeToggle } from "@/containers/NormalizeToggle";
 import { GroupToggle } from "@/containers/GroupToggle";
 import { LastRefreshedIndicator } from "@/containers/LastRefreshedIndicator";
@@ -76,14 +77,21 @@ export function Dashboard({
           </p>
         </div>
         <div className="app-header-links">
-          <a
+          <LinkButton
             href="https://forms.gle/VxQmxgHRhSGEvcYi6"
-            className="vote-btn"
             target="_blank"
-            rel="noopener noreferrer"
           >
             CAST YOUR VOTE!
-          </a>
+          </LinkButton>
+          <LinkButton
+            href=""
+            target="_blank"
+            tone="red"
+            disabled
+            sparkles
+          >
+            🍳 VIDEO COOKING..
+          </LinkButton>
         </div>
         <div className="app-header-controls">
           <LastRefreshedIndicator buildInfo={buildInfo} />
