@@ -1,32 +1,36 @@
 import { useMemo } from "react";
+import type { ReactNode } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
-import type { Vote } from "../../data/types";
-import { EVENTS, type TimelineEvent } from "../../data/events";
-import { useTimeStore } from "../../state/timeStore";
-import { useVotesUpTo } from "../../state/useVotesUpTo";
 import { PlotlyChart } from "./PlotlyChart";
+import type { TimeAnnotation, TimePoint } from "./types";
 
 interface Props {
-  allVotes: Vote[];
+  events: TimePoint[];
+  startTime: number;
+  endTime: number;
+  currentTime: number;
+  title: ReactNode;
+  seriesLabel?: string;
+  annotations?: readonly TimeAnnotation[];
   sampleCount?: number;
   windowFraction?: number;
 }
 
 const LINE_COLOR = "#2563eb";
 const FILL_COLOR = "rgba(37, 99, 235, 0.18)";
-
 const MARGIN = { l: 44, r: 12, t: 8, b: 40 } as const;
 
-export function VotesOverTime({
-  allVotes,
+export function TimeSeriesArea({
+  events,
+  startTime,
+  endTime,
+  currentTime,
+  title,
+  seriesLabel = "events",
+  annotations,
   sampleCount = 240,
   windowFraction = 1 / 50,
 }: Props) {
-  const slice = useVotesUpTo(allVotes);
-  const startTime = useTimeStore((s) => s.startTime);
-  const endTime = useTimeStore((s) => s.endTime);
-  const currentTime = useTimeStore((s) => s.currentTime);
-
   const span = endTime - startTime;
   const windowMs = span * windowFraction;
 
@@ -34,14 +38,13 @@ export function VotesOverTime({
     const out = { xs: [] as Date[], ys: [] as number[] };
     if (span <= 0 || sampleCount <= 0) return out;
 
-    const votes = slice.votes;
     const dx = span / sampleCount;
     let left = 0;
     let right = 0;
 
     const pushSample = (xMs: number) => {
-      while (right < votes.length && votes[right].timestamp <= xMs) right++;
-      while (left < right && votes[left].timestamp <= xMs - windowMs) left++;
+      while (right < events.length && events[right].timestamp <= xMs) right++;
+      while (left < right && events[left].timestamp <= xMs - windowMs) left++;
       out.xs.push(new Date(xMs));
       out.ys.push(right - left);
     };
@@ -54,7 +57,7 @@ export function VotesOverTime({
 
     pushSample(currentTime);
     return out;
-  }, [slice.count, span, startTime, currentTime, sampleCount, windowMs]);
+  }, [events, span, startTime, currentTime, sampleCount, windowMs]);
 
   const { data, layout } = useMemo(() => {
     const windowLabel = formatDuration(windowMs);
@@ -66,7 +69,7 @@ export function VotesOverTime({
       line: { color: LINE_COLOR, width: 2, shape: "spline", smoothing: 0.6 },
       fill: "tozeroy",
       fillcolor: FILL_COLOR,
-      hovertemplate: `%{x|%b %d %Y · %H:%M}<br><b>%{y}</b> votes in last ${windowLabel}<extra></extra>`,
+      hovertemplate: `%{x|%b %d %Y · %H:%M}<br><b>%{y}</b> ${seriesLabel} in last ${windowLabel}<extra></extra>`,
       showlegend: false,
     };
     const layout: Partial<Layout> = {
@@ -79,7 +82,10 @@ export function VotesOverTime({
         tickfont: { size: 10 },
       },
       yaxis: {
-        title: { text: `votes / ${windowLabel}`, font: { size: 11 } },
+        title: {
+          text: `${seriesLabel} / ${windowLabel}`,
+          font: { size: 11 },
+        },
         rangemode: "tozero",
         gridcolor: "#eee",
         zerolinecolor: "#ddd",
@@ -104,17 +110,19 @@ export function VotesOverTime({
       ],
     };
     return { data: [trace], layout };
-  }, [xs, ys, startTime, endTime, currentTime, windowMs]);
+  }, [xs, ys, startTime, endTime, currentTime, windowMs, seriesLabel]);
 
-  const visibleEvents: TimelineEvent[] =
-    span > 0
-      ? EVENTS.filter((e) => e.timestamp >= startTime && e.timestamp <= endTime)
+  const visibleAnnotations: TimeAnnotation[] =
+    span > 0 && annotations
+      ? annotations.filter(
+          (e) => e.timestamp >= startTime && e.timestamp <= endTime,
+        )
       : [];
 
   return (
     <div className="chart-card vot-card">
       <div className="chart-card-title">
-        votes over time
+        {title}
         <span className="chart-card-subtle">
           {" "}
           - rolling {formatDuration(windowMs)} window
@@ -126,7 +134,7 @@ export function VotesOverTime({
           layout={layout}
           style={{ width: "100%", height: "100%" }}
         />
-        {visibleEvents.length > 0 && (
+        {visibleAnnotations.length > 0 && (
           <div
             className="vot-flag-layer"
             style={
@@ -139,7 +147,7 @@ export function VotesOverTime({
             }
             aria-hidden={false}
           >
-            {visibleEvents.map((ev) => {
+            {visibleAnnotations.map((ev) => {
               const pct = (ev.timestamp - startTime) / span;
               const align =
                 pct > 0.85 ? "right" : pct < 0.15 ? "left" : "center";

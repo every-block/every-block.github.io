@@ -1,5 +1,6 @@
-import { SPEED_OPTIONS, useTimeStore, type Speed } from "../state/timeStore";
-import { EVENTS, type TimelineEvent } from "../data/events";
+import { SPEED_OPTIONS, useTimeStore, type Speed } from "../../state/timeStore";
+import { EVENTS, type TimelineEvent } from "../../data/events";
+import { Slider } from "../ui/Slider";
 
 interface Props {
   voteCount: number;
@@ -66,7 +67,19 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         </div>
       </div>
 
-      <div className="scrubber-range-wrap">
+      <Slider
+        size="md"
+        className="scrubber-slider"
+        min={startTime}
+        max={endTime || startTime + 1}
+        step={Math.max(1, Math.floor(total / 1000))}
+        value={currentTime}
+        disabled={!ready}
+        onChange={(v) => {
+          pause();
+          setCurrentTime(v);
+        }}
+      >
         {visibleEvents.length > 0 && (
           <div className="scrubber-flag-layer" aria-hidden={false}>
             {visibleEvents.map((ev) => {
@@ -86,7 +99,9 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
                   <span className="scrubber-flag-label">{ev.label}</span>
                   <span className="scrubber-flag-line" />
                   <span className="scrubber-flag-tooltip" role="tooltip">
-                    <span className="scrubber-flag-tooltip-title">{ev.label}</span>
+                    <span className="scrubber-flag-tooltip-title">
+                      {ev.label}
+                    </span>
                     <span className="scrubber-flag-tooltip-time">
                       {fmtTime(ev.timestamp)}
                     </span>
@@ -99,20 +114,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
             })}
           </div>
         )}
-        <input
-          className="scrubber-range"
-          type="range"
-          min={startTime}
-          max={endTime || startTime + 1}
-          step={Math.max(1, Math.floor(total / 1000))}
-          value={currentTime}
-          disabled={!ready}
-          onChange={(e) => {
-            pause();
-            setCurrentTime(+e.target.value);
-          }}
-        />
-      </div>
+      </Slider>
 
       <label className="scrubber-speed">
         <span>speed</span>

@@ -1,6 +1,6 @@
 import type { Block, Vote } from "../../data/types";
-import { HueRingKde } from "../charts/HueRingKde";
-import { RgbCubeCanvas } from "../charts/RgbCubeCanvas";
+import { HueRingCard } from "../containers/charts/HueRingCard";
+import { RgbCubeCard } from "../containers/charts/RgbCubeCard";
 
 interface Props {
   votes: Vote[];
@@ -9,7 +9,7 @@ interface Props {
   groupRepBlockByKey: Map<string, Block | null>;
 }
 
-export function ColorsTab({
+export function ColorsPage({
   votes,
   blocks,
   imageVersion,
@@ -17,8 +17,8 @@ export function ColorsTab({
 }: Props) {
   return (
     <div className="tab-grid tab-grid-colors">
-      <HueRingKde allVotes={votes} blocks={blocks} />
-      <RgbCubeCanvas
+      <HueRingCard allVotes={votes} blocks={blocks} />
+      <RgbCubeCard
         allVotes={votes}
         imageVersion={imageVersion}
         groupRepBlockByKey={groupRepBlockByKey}

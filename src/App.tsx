@@ -6,15 +6,18 @@ import { useTimeStore } from "./state/timeStore";
 import { useVotesUpTo } from "./state/useVotesUpTo";
 import { usePlaybackLoop } from "./state/usePlaybackLoop";
 import { useFilterStore } from "./state/filterStore";
-import { TimeScrubber } from "./components/TimeScrubber";
-import { VersionFilter } from "./components/VersionFilter";
-import { NormalizeToggle } from "./components/NormalizeToggle";
-import { GroupToggle } from "./components/GroupToggle";
-import { LastRefreshedIndicator } from "./components/LastRefreshedIndicator";
-import { TabSwitcher, type TabId } from "./components/TabSwitcher";
-import { StatsTab } from "./components/tabs/StatsTab";
-import { ColorsTab } from "./components/tabs/ColorsTab";
-import { LogisticsTab } from "./components/tabs/LogisticsTab";
+import { TimeScrubber } from "./components/containers/TimeScrubber";
+import { VersionFilter } from "./components/containers/VersionFilter";
+import { NormalizeToggle } from "./components/containers/NormalizeToggle";
+import { GroupToggle } from "./components/containers/GroupToggle";
+import { LastRefreshedIndicator } from "./components/containers/LastRefreshedIndicator";
+import {
+  TabSwitcher,
+  type TabId,
+} from "./components/containers/TabSwitcher";
+import { StatsPage } from "./components/pages/StatsPage";
+import { ColorsPage } from "./components/pages/ColorsPage";
+import { LogisticsPage } from "./components/pages/LogisticsPage";
 import { cleanVersion } from "./lib/versionEpoch";
 import { EVENTS } from "./data/events";
 import type { Block } from "./data/types";
@@ -153,16 +156,16 @@ export function App() {
             no votes mapped to any block
           </div>
         ) : activeTab === "stats" ? (
-          <StatsTab votes={filteredVotes} blocks={filteredBlocks} />
+          <StatsPage votes={filteredVotes} blocks={filteredBlocks} />
         ) : activeTab === "colors" ? (
-          <ColorsTab
+          <ColorsPage
             votes={filteredVotes}
             blocks={filteredBlocks}
             imageVersion={imageVersion}
             groupRepBlockByKey={bundle.groupClassifier.groupRepBlockByKey}
           />
         ) : (
-          <LogisticsTab votes={filteredVotes} />
+          <LogisticsPage votes={filteredVotes} />
         )}
       </main>
 
