@@ -112,9 +112,16 @@ async function fetchCsv<T extends Record<string, unknown>>(url: string): Promise
 
 function parseBlocks(rows: Record<string, unknown>[]): Block[] {
   const out: Block[] = [];
+  const seen = new Set<string>();
   for (const row of rows) {
     const name = pick(row, BLOCK_NAME_KEYS).trim();
     if (!name) continue;
+    const key = blockKey(name);
+    if (seen.has(key)) {
+      console.warn(`duplicate block row for "${name}" (key=${key}); skipping`);
+      continue;
+    }
+    seen.add(key);
     const version = pick(row, BLOCK_VERSION_KEYS).trim();
     const r = pick(row, BLOCK_R_KEYS);
     const g = pick(row, BLOCK_G_KEYS);
@@ -133,7 +140,7 @@ function parseBlocks(rows: Record<string, unknown>[]): Block[] {
     const imageUrl = pick(row, BLOCK_IMAGE_KEYS).trim();
     out.push({
       name,
-      key: blockKey(name),
+      key,
       version,
       rgb,
       imageUrl,
