@@ -5,6 +5,7 @@ import { useGroupStore } from "@/stores/group-store";
 import { readableTextOn, rgbToCss } from "@/utils/color";
 import { HBarRace, type HBarMode } from "@/ui/charts/HBarRace";
 import type { SeriesItem } from "@/types/chart-items";
+import { Toggle } from "@/ui/Toggle";
 import { GroupedBadge } from "../GroupedBadge";
 
 interface Props {
@@ -27,18 +28,23 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
   const group = useGroupStore((s) => s.group);
   const [mode, setMode] = useState<HBarMode>("top");
   const [n, setN] = useState<number>(defaultN);
+  const [materialsOnly, setMaterialsOnly] = useState(false);
 
   const items = useMemo<SeriesItem[]>(() => {
-    const idOf = (b: Block) => (group && b.groupKey ? b.groupKey : b.key);
+    const groupView = group || materialsOnly;
+    const idOf = (b: Block) =>
+      groupView && b.groupKey ? b.groupKey : b.key;
     const nameOf = (b: Block) =>
-      group && b.groupName ? b.groupName : b.name;
+      groupView && b.groupName ? b.groupName : b.name;
+    const includes = (b: Block) => !materialsOnly || !!b.groupKey;
 
     const counts = new Map<string, Accum>();
     if (mode === "bottom") {
-      if (group) {
+      if (groupView) {
         type Seed = { name: string; r: number; g: number; b: number; count: number };
         const seeds = new Map<string, Seed>();
         for (const bk of blocks) {
+          if (!includes(bk)) continue;
           const id = idOf(bk);
           const nm = nameOf(bk);
           const [r, g, b] = bk.rgb;
@@ -67,6 +73,7 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
         }
       } else {
         for (const bk of blocks) {
+          if (!includes(bk)) continue;
           counts.set(bk.key, {
             key: bk.key,
             name: bk.name,
@@ -80,6 +87,7 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
     }
 
     for (const v of slice.votes) {
+      if (!includes(v.block)) continue;
       const id = idOf(v.block);
       const [r, g, b] = v.block.rgb;
       const e = counts.get(id);
@@ -124,9 +132,10 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
         : a.value - b.value || (a.label < b.label ? -1 : 1),
     );
     return out.slice(0, n);
-  }, [slice.count, n, mode, blocks, group]);
+  }, [slice.count, n, mode, blocks, group, materialsOnly]);
 
-  const title = `${mode === "top" ? "top" : "bottom"} ${n} ${group ? "entries" : "blocks"}`;
+  const noun = materialsOnly ? "materials" : group ? "entries" : "blocks";
+  const title = `${mode === "top" ? "top" : "bottom"} ${n} ${noun}`;
 
   return (
     <HBarRace
@@ -139,6 +148,15 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
       onNChange={setN}
       showNControl
       formatValue={(e) => String(e.value)}
+      extraControls={
+        <Toggle
+          active={materialsOnly}
+          onChange={setMaterialsOnly}
+          label="MATERIALS"
+          tone="yellow"
+          title="Show only the top-level material groups (e.g. Stone, Oak, Cobblestone)"
+        />
+      }
       badge={
         group ? (
           <GroupedBadge description="Variant blocks are merged into canonical groups (e.g. Stone Slab + Stone Brick Stairs into Stone). Each group's bar color is the vote-weighted RGB average across its members." />

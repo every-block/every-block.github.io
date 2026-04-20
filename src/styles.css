@@ -7,6 +7,10 @@
   --tone-blue-border: #2563eb;
   --tone-blue-fg: #1d4ed8;
   --tone-blue-ring: rgba(37, 99, 235, 0.18);
+  --tone-yellow-bg: #fff8e1;
+  --tone-yellow-border: #f59e0b;
+  --tone-yellow-fg: #b45309;
+  --tone-yellow-ring: rgba(245, 158, 11, 0.22);
 
   --pill-bg: #f1f1f3;
   --pill-bg-floating: rgba(241, 241, 243, 0.92);
@@ -1191,6 +1195,17 @@ body,
 .ui-toggle--blue.is-on .ui-toggle-dot {
   background: var(--tone-blue-border);
   box-shadow: 0 0 0 3px var(--tone-blue-ring);
+}
+
+.ui-toggle--yellow.is-on {
+  background: var(--tone-yellow-bg);
+  border-color: var(--tone-yellow-border);
+  color: var(--tone-yellow-fg);
+}
+
+.ui-toggle--yellow.is-on .ui-toggle-dot {
+  background: var(--tone-yellow-border);
+  box-shadow: 0 0 0 3px var(--tone-yellow-ring);
 }
 
 .ui-badge {

@@ -21,6 +21,7 @@ interface Props {
   rowGap?: number;
   transitionMs?: number;
   insideLabelMinPct?: number;
+  extraControls?: ReactNode;
 }
 
 export function HBarRace({
@@ -39,6 +40,7 @@ export function HBarRace({
   rowGap = 4,
   transitionMs = 350,
   insideLabelMinPct = 18,
+  extraControls,
 }: Props) {
   const [nInput, setNInput] = useState<string>(n != null ? String(n) : "");
 
@@ -55,7 +57,7 @@ export function HBarRace({
     setNInput(String(clamped));
   };
 
-  const effectiveN = n ?? items.length;
+  const effectiveN = Math.min(n ?? items.length, items.length);
   const maxValue =
     items.reduce((m, e) => (e.value > m ? e.value : m), 0) || 1;
   const totalHeight = effectiveN * (rowHeight + rowGap);
@@ -65,8 +67,9 @@ export function HBarRace({
       {badge}
       <div className="chart-card-header">
         <div className="chart-card-title">{title}</div>
-        {(showModeToggle || showNControl) && (
+        {(showModeToggle || showNControl || extraControls) && (
           <div className="hbar-controls">
+            {extraControls}
             {showModeToggle && onModeChange && (
               <Tabs<HBarMode>
                 size="sm"

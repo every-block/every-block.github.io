@@ -2,7 +2,7 @@ interface Props {
   active: boolean;
   onChange: (next: boolean) => void;
   label: string;
-  tone?: "green" | "blue" | "neutral";
+  tone?: "green" | "blue" | "yellow" | "neutral";
   title?: string;
 }
 

@@ -10,7 +10,7 @@ export function GroupToggle() {
       onChange={() => toggle()}
       label="GROUP"
       tone="blue"
-      title="Merge variant blocks (e.g. Stone Slab → Stone) into canonical groups for supported charts"
+      title="Merge variant blocks (e.g. Stone Slab → Stone) into canonical groups for supported charts (Ungrouped blocks still visible)"
     />
   );
 }
