@@ -447,6 +447,11 @@ export const GROUP_RULES: readonly GroupRule[] = [
     ],
     representative: "Warped Planks",
   },
+  {
+    key: "group:amethyst",
+    name: "Amethyst",
+    members: ["Amethyst Cluster", "Block of Amethyst", "Large Amethyst Bud", "Medium Amethyst Bud", "Small Amethyst Bud"]
+  }
 ];
 
 export interface GroupClassifier {
