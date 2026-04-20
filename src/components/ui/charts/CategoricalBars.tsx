@@ -76,7 +76,7 @@ export function CategoricalBars({
   }, [items, yAxisLabel, hoverTemplate, customdata]);
 
   return (
-    <div className={`chart-card vhist-card${className ? ` ${className}` : ""}`}>
+    <div className={`chart-card chart-card--tight${className ? ` ${className}` : ""}`}>
       <div className="chart-card-title">{title}</div>
       {badge}
       <PlotlyChart

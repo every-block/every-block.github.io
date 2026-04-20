@@ -120,7 +120,7 @@ export function TimeSeriesArea({
       : [];
 
   return (
-    <div className="chart-card vot-card">
+    <div className="chart-card chart-card--tight">
       <div className="chart-card-title">
         {title}
         <span className="chart-card-subtle">

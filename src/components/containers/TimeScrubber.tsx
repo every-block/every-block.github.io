@@ -42,7 +42,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
   return (
     <div className="scrubber">
       <button
-        className="btn"
+        className="scrubber-btn"
         onClick={restart}
         title="Restart"
         aria-label="Restart"
@@ -50,7 +50,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         ⏮
       </button>
       <button
-        className="btn btn-primary"
+        className="scrubber-btn scrubber-btn--primary"
         onClick={toggle}
         disabled={!ready}
         title={isPlaying ? "Pause" : "Play"}
