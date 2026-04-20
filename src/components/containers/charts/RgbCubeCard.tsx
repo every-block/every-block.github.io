@@ -139,8 +139,8 @@ export function RgbCubeCard({
         <Tabs<CubeRenderMode>
           size="sm"
           items={[
-            { id: "color", label: "COLOR" },
             { id: "sprite", label: "SPRITE" },
+            { id: "color", label: "COLOR" },
           ]}
           active={renderMode}
           onChange={setRenderMode}
