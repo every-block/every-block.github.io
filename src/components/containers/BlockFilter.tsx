@@ -1,20 +1,14 @@
 import { useMemo } from "react";
-import type { Block, Rgb } from "@/types/domain";
+import type { Block } from "@/types/domain";
 import { useFilterStore } from "@/stores/filter-store";
-import { rgbToCss } from "@/utils/color";
 import {
   MultiSelectFilter,
   type MultiSelectGroup,
 } from "@/ui/MultiSelectFilter";
+import { ItemSprite } from "@/ui/ItemSprite";
 
 interface Props {
   blocks: Block[];
-}
-
-function Swatch({ rgb }: { rgb: Rgb }) {
-  return (
-    <span className="block-swatch" style={{ background: rgbToCss(rgb) }} />
-  );
 }
 
 export function BlockFilter({ blocks }: Props) {
@@ -59,7 +53,7 @@ export function BlockFilter({ blocks }: Props) {
           .map((b) => ({
             value: b.key,
             label: b.name,
-            icon: <Swatch rgb={b.rgb} />,
+            icon: <ItemSprite block={b} />,
             searchText: `${g.name} ${b.name}`,
           })),
       }));
@@ -74,7 +68,7 @@ export function BlockFilter({ blocks }: Props) {
           {
             value: b.key,
             label: b.name,
-            icon: <Swatch rgb={b.rgb} />,
+            icon: <ItemSprite block={b} />,
             searchText: b.name,
           },
         ],

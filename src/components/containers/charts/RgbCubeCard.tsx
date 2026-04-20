@@ -1,8 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Block, Vote } from "@/types/domain";
 import { useTimeStore } from "@/stores/time-store";
 import { useGroupStore } from "@/stores/group-store";
-import { RgbCube } from "@/ui/charts/RgbCube";
+import { RgbCube, type CubeRenderMode } from "@/ui/charts/RgbCube";
+import { Tabs } from "@/ui/Tabs";
 import type { ColorPoint } from "@/types/chart-items";
 import { GroupedBadge } from "../GroupedBadge";
 
@@ -30,6 +31,7 @@ export function RgbCubeCard({
 }: Props) {
   const group = useGroupStore((s) => s.group);
   const currentTime = useTimeStore((s) => s.currentTime);
+  const [renderMode, setRenderMode] = useState<CubeRenderMode>("sprite");
 
   const sortedTimes = useMemo(
     () => allVotes.map((v) => v.timestamp),
@@ -132,6 +134,19 @@ export function RgbCubeCard({
     <RgbCube
       items={items}
       title="RGB cube"
+      renderMode={renderMode}
+      extraControls={
+        <Tabs<CubeRenderMode>
+          size="sm"
+          items={[
+            { id: "color", label: "COLOR" },
+            { id: "sprite", label: "SPRITE" },
+          ]}
+          active={renderMode}
+          onChange={setRenderMode}
+          ariaLabel="Cube point style"
+        />
+      }
       formatTooltip={(item) => (
         <>
           <div className="cube-tooltip-name">{item.label}</div>

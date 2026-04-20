@@ -13,12 +13,16 @@ import {
 import { rgbToCss } from "@/utils/color";
 import type { ColorPoint } from "@/types/chart-items";
 
+export type CubeRenderMode = "color" | "sprite";
+
 interface Props {
   items: ColorPoint[];
   title: ReactNode;
   badge?: ReactNode;
   hint?: string;
   formatTooltip?: (item: ColorPoint) => ReactNode;
+  extraControls?: ReactNode;
+  renderMode?: CubeRenderMode;
 }
 
 interface Hover {
@@ -43,6 +47,8 @@ export function RgbCube({
   badge,
   hint = "drag to orbit - scroll to zoom",
   formatTooltip,
+  extraControls,
+  renderMode = "sprite",
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -59,8 +65,10 @@ export function RgbCube({
 
   const itemsRef = useRef(items);
   const maxWeightRef = useRef(maxWeight);
+  const renderModeRef = useRef(renderMode);
   itemsRef.current = items;
   maxWeightRef.current = maxWeight;
+  renderModeRef.current = renderMode;
 
   useEffect(() => {
     const wrap = containerRef.current;
@@ -91,7 +99,7 @@ export function RgbCube({
 
   useEffect(() => {
     requestRedraw();
-  }, [items]);
+  }, [items, renderMode]);
 
   function draw() {
     const canvas = canvasRef.current;
@@ -155,10 +163,11 @@ export function RgbCube({
     }
     sprites.sort((a, b) => b.depth - a.depth);
 
+    const mode = renderModeRef.current;
     for (const s of sprites) {
       const half = s.size / 2;
       const img = s.item.image;
-      if (img && img.complete) {
+      if (mode === "sprite" && img && img.complete) {
         ctx.drawImage(img, s.x - half, s.y - half, s.size, s.size);
       } else {
         ctx.fillStyle = rgbToCss(s.item.rgb);
@@ -286,7 +295,14 @@ export function RgbCube({
 
   return (
     <div className="chart-card chart-card-cube">
-      <div className="chart-card-title">{title}</div>
+      {extraControls ? (
+        <div className="chart-card-header">
+          <div className="chart-card-title">{title}</div>
+          <div className="cube-controls">{extraControls}</div>
+        </div>
+      ) : (
+        <div className="chart-card-title">{title}</div>
+      )}
       {badge}
       <div ref={containerRef} className="cube-canvas-wrap">
         <canvas ref={canvasRef} className="cube-canvas" />

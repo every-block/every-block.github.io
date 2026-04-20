@@ -480,6 +480,12 @@ body,
   padding-right: 0;
 }
 
+.cube-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .cube-canvas-wrap {
   position: relative;
   width: 100%;
@@ -1354,6 +1360,23 @@ body,
 .ui-multiselect-option-icon > img {
   width: 100%;
   height: 100%;
+  display: block;
+}
+
+.ui-multiselect-option-icon > img.item-sprite,
+.ui-multiselect-option-icon > .item-sprite--cropped {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+}
+
+.item-sprite--fallback {
+  display: block;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+}
+
+.item-sprite--cropped {
   display: block;
 }
 
