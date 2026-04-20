@@ -365,13 +365,6 @@ export const GROUP_RULES: readonly GroupRule[] = [
     representative: "Block of Resin",
   },
   {
-    key: "group:block-of-netherite",
-    name: "Block of Netherite",
-    members: ["Block of Netherite"],
-    representative: "Block of Netherite",
-  },
-
-  {
     key: "group:mushroom-block",
     name: "Mushroom Block",
     members: ["Brown Mushroom Block", "Red Mushroom Block", "Mushroom Stem"],

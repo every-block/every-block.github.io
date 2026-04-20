@@ -2,39 +2,57 @@ import { create } from "zustand";
 
 export interface FilterState {
   excludedVersions: Set<string>;
-
   toggleVersion: (version: string) => void;
-  setExcluded: (next: Set<string>) => void;
-  setMany: (versions: readonly string[], included: boolean) => void;
-  selectAll: () => void;
-  excludeAll: (allVersions: readonly string[]) => void;
+  setVersionsIncluded: (versions: readonly string[], included: boolean) => void;
+  selectAllVersions: () => void;
+  excludeAllVersions: (all: readonly string[]) => void;
+
+  excludedBlockKeys: Set<string>;
+  toggleBlockKey: (key: string) => void;
+  setBlockKeysIncluded: (keys: readonly string[], included: boolean) => void;
+  selectAllBlocks: () => void;
+  excludeAllBlocks: (all: readonly string[]) => void;
 }
+
+const toggleIn = (current: Set<string>, value: string): Set<string> => {
+  const next = new Set(current);
+  if (next.has(value)) next.delete(value);
+  else next.add(value);
+  return next;
+};
+
+const setManyIn = (
+  current: Set<string>,
+  values: readonly string[],
+  included: boolean,
+): Set<string> => {
+  const next = new Set(current);
+  for (const v of values) {
+    if (included) next.delete(v);
+    else next.add(v);
+  }
+  return next;
+};
 
 export const useFilterStore = create<FilterState>((set) => ({
   excludedVersions: new Set<string>(),
+  toggleVersion: (v) =>
+    set((s) => ({ excludedVersions: toggleIn(s.excludedVersions, v) })),
+  setVersionsIncluded: (versions, included) =>
+    set((s) => ({
+      excludedVersions: setManyIn(s.excludedVersions, versions, included),
+    })),
+  selectAllVersions: () => set({ excludedVersions: new Set<string>() }),
+  excludeAllVersions: (all) => set({ excludedVersions: new Set<string>(all) }),
 
-  toggleVersion: (version) =>
-    set((s) => {
-      const next = new Set(s.excludedVersions);
-      if (next.has(version)) next.delete(version);
-      else next.add(version);
-      return { excludedVersions: next };
-    }),
-
-  setExcluded: (next) => set({ excludedVersions: new Set(next) }),
-
-  setMany: (versions, included) =>
-    set((s) => {
-      const next = new Set(s.excludedVersions);
-      for (const v of versions) {
-        if (included) next.delete(v);
-        else next.add(v);
-      }
-      return { excludedVersions: next };
-    }),
-
-  selectAll: () => set({ excludedVersions: new Set<string>() }),
-
-  excludeAll: (allVersions) =>
-    set({ excludedVersions: new Set<string>(allVersions) }),
+  excludedBlockKeys: new Set<string>(),
+  toggleBlockKey: (k) =>
+    set((s) => ({ excludedBlockKeys: toggleIn(s.excludedBlockKeys, k) })),
+  setBlockKeysIncluded: (keys, included) =>
+    set((s) => ({
+      excludedBlockKeys: setManyIn(s.excludedBlockKeys, keys, included),
+    })),
+  selectAllBlocks: () => set({ excludedBlockKeys: new Set<string>() }),
+  excludeAllBlocks: (all) =>
+    set({ excludedBlockKeys: new Set<string>(all) }),
 }));

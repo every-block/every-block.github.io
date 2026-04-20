@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { BuildInfo } from "@/data/load-build-info";
 import type { Block, DataBundle, Vote } from "@/types/domain";
 import { TimeScrubber } from "@/containers/TimeScrubber";
+import { BlockFilter } from "@/containers/BlockFilter";
 import { VersionFilter } from "@/containers/VersionFilter";
 import { NormalizeToggle } from "@/containers/NormalizeToggle";
 import { GroupToggle } from "@/containers/GroupToggle";
@@ -88,6 +89,7 @@ export function Dashboard({
           <LastRefreshedIndicator buildInfo={buildInfo} />
           <NormalizeToggle />
           <GroupToggle />
+          {bundle && <BlockFilter blocks={bundle.blocks} />}
           {bundle && <VersionFilter blocks={bundle.blocks} />}
           <TabSwitcher active={activeTab} onChange={setActiveTab} />
         </div>

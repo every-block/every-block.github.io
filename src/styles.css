@@ -958,11 +958,11 @@ body,
   opacity: 0.55;
 }
 
-.version-filter {
+.ui-multiselect {
   position: relative;
 }
 
-.version-filter-button {
+.ui-multiselect-button {
   appearance: none;
   background: white;
   border: 1px solid #d6d6d9;
@@ -978,21 +978,21 @@ body,
   transition: border-color 0.15s, background 0.15s;
 }
 
-.version-filter-button:hover {
+.ui-multiselect-button:hover {
   border-color: #b8b8bd;
 }
 
-.version-filter-button.is-open {
+.ui-multiselect-button.is-open {
   border-color: #1f1f1f;
   background: #fafafa;
 }
 
-.version-filter-chevron {
+.ui-multiselect-chevron {
   font-size: 10px;
   color: #888;
 }
 
-.version-filter-panel {
+.ui-multiselect-panel {
   position: absolute;
   right: 0;
   top: calc(100% + 6px);
@@ -1008,7 +1008,30 @@ body,
   overflow: hidden;
 }
 
-.version-filter-panel-toolbar {
+.ui-multiselect-search {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.ui-multiselect-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none;
+  border: 1px solid #d6d6d9;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #333;
+  background: white;
+}
+
+.ui-multiselect-search-input:focus {
+  outline: none;
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.15);
+}
+
+.ui-multiselect-toolbar {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1018,7 +1041,7 @@ body,
   color: #666;
 }
 
-.version-filter-link {
+.ui-multiselect-link {
   appearance: none;
   background: none;
   border: none;
@@ -1028,58 +1051,68 @@ body,
   cursor: pointer;
 }
 
-.version-filter-link:hover:not(:disabled) {
+.ui-multiselect-link:hover:not(:disabled) {
   text-decoration: underline;
 }
 
-.version-filter-link:disabled {
+.ui-multiselect-link:disabled {
   color: #aaa;
   cursor: not-allowed;
 }
 
-.version-filter-sep {
+.ui-multiselect-sep {
   color: #ccc;
 }
 
-.version-filter-panel-list {
+.ui-multiselect-list {
   overflow-y: auto;
   padding: 6px 0;
 }
 
-.version-epoch {
+.ui-multiselect-empty {
+  padding: 12px;
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+}
+
+.ui-multiselect-group {
   padding: 0 6px;
 }
 
-.version-epoch + .version-epoch {
+.ui-multiselect-group + .ui-multiselect-group {
   border-top: 1px solid #f1f1f3;
 }
 
-.version-epoch-header {
+.ui-multiselect-group-header {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
 }
 
-.version-epoch-flat-row {
+.ui-multiselect-flat-row {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
   cursor: pointer;
   border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
 }
 
-.version-epoch-flat-row:hover {
+.ui-multiselect-flat-row:hover {
   background: #f5f5f7;
 }
 
-.version-epoch-checkbox {
+.ui-multiselect-checkbox {
   margin: 0;
   flex-shrink: 0;
 }
 
-.version-epoch-toggle {
+.ui-multiselect-group-toggle {
   appearance: none;
   background: none;
   border: none;
@@ -1094,29 +1127,29 @@ body,
   text-align: left;
 }
 
-.version-epoch-name {
+.ui-multiselect-group-name {
   font-size: 13px;
   font-weight: 600;
   flex: 1;
 }
 
-.version-epoch-count {
+.ui-multiselect-group-count {
   font-size: 11px;
   color: #999;
   font-variant-numeric: tabular-nums;
 }
 
-.version-epoch-chevron {
+.ui-multiselect-group-chevron {
   font-size: 10px;
   color: #888;
   transition: transform 0.15s;
 }
 
-.version-epoch-chevron.is-open {
+.ui-multiselect-group-chevron.is-open {
   transform: rotate(90deg);
 }
 
-.version-epoch-list {
+.ui-multiselect-group-list {
   list-style: none;
   margin: 0 0 4px;
   padding: 0 8px 4px 32px;
@@ -1125,7 +1158,7 @@ body,
   gap: 2px;
 }
 
-.version-row {
+.ui-multiselect-row {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1136,13 +1169,42 @@ body,
   cursor: pointer;
 }
 
-.version-row:hover {
+.ui-multiselect-row:hover {
   background: #f5f5f7;
   color: #222;
 }
 
-.version-row input {
+.ui-multiselect-row input {
   margin: 0;
+}
+
+.ui-multiselect-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.ui-multiselect-option-icon > svg,
+.ui-multiselect-option-icon > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ui-multiselect-option-label {
+  flex: 1;
+}
+
+.block-swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
 }
 
 .ui-toggle {

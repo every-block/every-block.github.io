@@ -21,6 +21,7 @@ export function DashboardContainer() {
   const setRange = useTimeStore((s) => s.setRange);
   const setCurrentTime = useTimeStore((s) => s.setCurrentTime);
   const excludedVersions = useFilterStore((s) => s.excludedVersions);
+  const excludedBlockKeys = useFilterStore((s) => s.excludedBlockKeys);
 
   usePlaybackLoop();
 
@@ -56,19 +57,25 @@ export function DashboardContainer() {
 
   const filteredVotes = useMemo<Vote[]>(() => {
     if (!bundle) return EMPTY_VOTES;
-    if (excludedVersions.size === 0) return bundle.votes;
+    if (excludedVersions.size === 0 && excludedBlockKeys.size === 0)
+      return bundle.votes;
     return bundle.votes.filter(
-      (v) => !excludedVersions.has(cleanVersion(v.block.version)),
+      (v) =>
+        !excludedVersions.has(cleanVersion(v.block.version)) &&
+        !excludedBlockKeys.has(v.block.key),
     );
-  }, [bundle, excludedVersions]);
+  }, [bundle, excludedVersions, excludedBlockKeys]);
 
   const filteredBlocks = useMemo<Block[]>(() => {
     if (!bundle) return EMPTY_BLOCKS;
-    if (excludedVersions.size === 0) return bundle.blocks;
+    if (excludedVersions.size === 0 && excludedBlockKeys.size === 0)
+      return bundle.blocks;
     return bundle.blocks.filter(
-      (b) => !excludedVersions.has(cleanVersion(b.version)),
+      (b) =>
+        !excludedVersions.has(cleanVersion(b.version)) &&
+        !excludedBlockKeys.has(b.key),
     );
-  }, [bundle, excludedVersions]);
+  }, [bundle, excludedVersions, excludedBlockKeys]);
 
   const voteSlice = useVotesUpTo(filteredVotes);
 
