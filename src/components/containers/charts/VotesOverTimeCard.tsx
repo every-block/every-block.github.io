@@ -1,8 +1,8 @@
-import type { Vote } from "../../../data/types";
-import { EVENTS } from "../../../data/events";
-import { useTimeStore } from "../../../state/timeStore";
-import { useVotesUpTo } from "../../../state/useVotesUpTo";
-import { TimeSeriesArea } from "../../ui/charts/TimeSeriesArea";
+import type { Vote } from "@/types/domain";
+import { EVENTS } from "@/data/events";
+import { useTimeStore } from "@/stores/time-store";
+import { useVotesUpTo } from "@/hooks/use-votes-up-to";
+import { TimeSeriesArea } from "@/ui/charts/TimeSeriesArea";
 
 interface Props {
   allVotes: Vote[];

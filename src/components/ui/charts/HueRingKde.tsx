@@ -1,14 +1,11 @@
 import { useMemo } from "react";
 import type { ReactNode } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
-import { hsvToCss } from "../../../lib/color";
-import {
-  searchsorted,
-  weightedCircularKde,
-} from "../../../lib/circularKde";
-import { Tabs } from "../Tabs";
-import { PlotlyChart } from "./PlotlyChart";
-import type { HuePoint } from "./types";
+import { hsvToCss } from "@/utils/color";
+import { searchsorted, weightedCircularKde } from "@/utils/circular-kde";
+import { Tabs } from "@/ui/Tabs";
+import { PlotlyChart } from "@/ui/charts/PlotlyChart";
+import type { HuePoint } from "@/types/chart-items";
 
 export type HueRingMode = "items" | "base" | "normalized";
 

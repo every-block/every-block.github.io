@@ -1,4 +1,4 @@
-import { Tabs } from "../ui/Tabs";
+import { Tabs } from "@/ui/Tabs";
 
 export type TabId = "stats" | "colors" | "logistics";
 

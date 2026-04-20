@@ -1,5 +1,5 @@
-import { useNormalizeStore } from "../../state/normalizeStore";
-import { Toggle } from "../ui/Toggle";
+import { useNormalizeStore } from "@/stores/normalize-store";
+import { Toggle } from "@/ui/Toggle";
 
 export function NormalizeToggle() {
   const enabled = useNormalizeStore((s) => s.normalize);

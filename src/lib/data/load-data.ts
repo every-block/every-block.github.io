@@ -1,7 +1,7 @@
 import Papa from "papaparse";
-import type { Block, DataBundle, Response, Rgb, Vote } from "./types";
-import { VOTE_REMAP_BY_KEY } from "./voteRemap";
-import { buildGroupClassifier } from "./blockGroups";
+import type { Block, DataBundle, Response, Rgb, Vote } from "@/types/domain";
+import { VOTE_REMAP_BY_KEY } from "@/data/vote-remap";
+import { buildGroupClassifier } from "@/data/block-groups";
 
 const RESPONSES_URL = "/data/responses.csv";
 const BLOCKS_URL = "/data/blocks.csv";

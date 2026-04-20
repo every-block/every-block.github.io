@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import type { Block, Rgb, Vote } from "../../../data/types";
-import { useVotesUpTo } from "../../../state/useVotesUpTo";
-import { useNormalizeStore } from "../../../state/normalizeStore";
-import { readableTextOn, rgbToCss } from "../../../lib/color";
-import { cleanVersion } from "../../../lib/versionEpoch";
-import { HBarRace } from "../../ui/charts/HBarRace";
-import type { SeriesItem } from "../../ui/charts/types";
+import type { Block, Rgb, Vote } from "@/types/domain";
+import { useVotesUpTo } from "@/hooks/use-votes-up-to";
+import { useNormalizeStore } from "@/stores/normalize-store";
+import { readableTextOn, rgbToCss } from "@/utils/color";
+import { cleanVersion } from "@/utils/version-epoch";
+import { HBarRace } from "@/ui/charts/HBarRace";
+import type { SeriesItem } from "@/types/chart-items";
 import { NormalizedBadge } from "../NormalizedBadge";
 
 interface Props {

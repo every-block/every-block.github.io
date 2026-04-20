@@ -1,6 +1,6 @@
-import { SPEED_OPTIONS, useTimeStore, type Speed } from "../../state/timeStore";
-import { EVENTS, type TimelineEvent } from "../../data/events";
-import { Slider } from "../ui/Slider";
+import { SPEED_OPTIONS, useTimeStore, type Speed } from "@/stores/time-store";
+import { EVENTS, type TimelineEvent } from "@/data/events";
+import { Slider } from "@/ui/Slider";
 
 interface Props {
   voteCount: number;

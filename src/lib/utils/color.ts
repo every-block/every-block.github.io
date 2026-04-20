@@ -1,4 +1,4 @@
-import type { Rgb } from "../data/types";
+import type { Rgb } from "@/types/domain";
 
 export function rgbToCss([r, g, b]: Rgb, alpha = 1): string {
   if (alpha >= 1) return `rgb(${r}, ${g}, ${b})`;

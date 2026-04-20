@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { EVENTS } from "../data/events";
-import { BASE_PLAYTHROUGH_MS, useTimeStore } from "./timeStore";
+import { EVENTS } from "@/data/events";
+import { BASE_PLAYTHROUGH_MS, useTimeStore } from "@/stores/time-store";
 
 const STOP_TIMESTAMPS: readonly number[] = EVENTS.filter(
   (e) => e.stop === true,

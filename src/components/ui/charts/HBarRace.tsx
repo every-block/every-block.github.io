@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Tabs } from "../Tabs";
-import type { SeriesItem } from "./types";
+import { Tabs } from "@/ui/Tabs";
+import type { SeriesItem } from "@/types/chart-items";
 
 export type HBarMode = "top" | "bottom";
 

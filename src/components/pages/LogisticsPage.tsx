@@ -1,5 +1,5 @@
-import type { Vote } from "../../data/types";
-import { VotesOverTimeCard } from "../containers/charts/VotesOverTimeCard";
+import type { Vote } from "@/types/domain";
+import { VotesOverTimeCard } from "@/containers/charts/VotesOverTimeCard";
 
 interface Props {
   votes: Vote[];

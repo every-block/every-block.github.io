@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import type { Block, Vote } from "../../../data/types";
-import { useTimeStore } from "../../../state/timeStore";
-import { useGroupStore } from "../../../state/groupStore";
-import { RgbCube } from "../../ui/charts/RgbCube";
-import type { ColorPoint } from "../../ui/charts/types";
+import type { Block, Vote } from "@/types/domain";
+import { useTimeStore } from "@/stores/time-store";
+import { useGroupStore } from "@/stores/group-store";
+import { RgbCube } from "@/ui/charts/RgbCube";
+import type { ColorPoint } from "@/types/chart-items";
 import { GroupedBadge } from "../GroupedBadge";
 
 interface Props {

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { Vote } from "../data/types";
-import { useTimeStore } from "./timeStore";
+import type { Vote } from "@/types/domain";
+import { useTimeStore } from "@/stores/time-store";
 
 function upperBoundIndex(votes: Vote[], t: number): number {
   let lo = 0;

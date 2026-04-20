@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Block } from "../../data/types";
-import { useFilterStore } from "../../state/filterStore";
-import { allVersionsInOrder, groupVersions } from "../../lib/versionEpoch";
+import type { Block } from "@/types/domain";
+import { useFilterStore } from "@/stores/filter-store";
+import { allVersionsInOrder, groupVersions } from "@/utils/version-epoch";
 
 interface Props {
   blocks: Block[];

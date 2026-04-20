@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import type { Block, Vote } from "../../../data/types";
-import { useVotesUpTo } from "../../../state/useVotesUpTo";
-import { useGroupStore } from "../../../state/groupStore";
-import { readableTextOn, rgbToCss } from "../../../lib/color";
-import { HBarRace, type HBarMode } from "../../ui/charts/HBarRace";
-import type { SeriesItem } from "../../ui/charts/types";
+import type { Block, Vote } from "@/types/domain";
+import { useVotesUpTo } from "@/hooks/use-votes-up-to";
+import { useGroupStore } from "@/stores/group-store";
+import { readableTextOn, rgbToCss } from "@/utils/color";
+import { HBarRace, type HBarMode } from "@/ui/charts/HBarRace";
+import type { SeriesItem } from "@/types/chart-items";
 import { GroupedBadge } from "../GroupedBadge";
 
 interface Props {

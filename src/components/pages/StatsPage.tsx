@@ -1,7 +1,7 @@
-import type { Block, Vote } from "../../data/types";
-import { TopBlocksRace } from "../containers/charts/TopBlocksRace";
-import { TopVersionsRace } from "../containers/charts/TopVersionsRace";
-import { VersionHistogramCard } from "../containers/charts/VersionHistogramCard";
+import type { Block, Vote } from "@/types/domain";
+import { TopBlocksRace } from "@/containers/charts/TopBlocksRace";
+import { TopVersionsRace } from "@/containers/charts/TopVersionsRace";
+import { VersionHistogramCard } from "@/containers/charts/VersionHistogramCard";
 
 interface Props {
   votes: Vote[];

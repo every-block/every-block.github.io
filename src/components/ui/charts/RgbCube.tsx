@@ -9,9 +9,9 @@ import {
   projectWithBasis,
   type Camera,
   type Vec3,
-} from "../../../lib/canvas3d";
-import { rgbToCss } from "../../../lib/color";
-import type { ColorPoint } from "./types";
+} from "@/utils/canvas3d";
+import { rgbToCss } from "@/utils/color";
+import type { ColorPoint } from "@/types/chart-items";
 
 interface Props {
   items: ColorPoint[];

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { BuildInfo } from "../../data/loadBuildInfo";
+import type { BuildInfo } from "@/data/load-build-info";
 
 interface Props {
   buildInfo: BuildInfo | null;

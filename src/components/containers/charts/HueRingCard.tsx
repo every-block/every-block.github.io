@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
-import type { Block, Rgb, Vote } from "../../../data/types";
-import { useVotesUpTo } from "../../../state/useVotesUpTo";
-import { useSaturationStore } from "../../../state/saturationStore";
-import { useNormalizeStore } from "../../../state/normalizeStore";
-import { useGroupStore } from "../../../state/groupStore";
-import { rgbToCss, rgbToHsv } from "../../../lib/color";
-import { HueRingKde, type HueRingMode } from "../../ui/charts/HueRingKde";
-import type { HuePoint } from "../../ui/charts/types";
-import { Slider } from "../../ui/Slider";
+import type { Block, Rgb, Vote } from "@/types/domain";
+import { useVotesUpTo } from "@/hooks/use-votes-up-to";
+import { useSaturationStore } from "@/stores/saturation-store";
+import { useNormalizeStore } from "@/stores/normalize-store";
+import { useGroupStore } from "@/stores/group-store";
+import { rgbToCss, rgbToHsv } from "@/utils/color";
+import { HueRingKde, type HueRingMode } from "@/ui/charts/HueRingKde";
+import type { HuePoint } from "@/types/chart-items";
+import { Slider } from "@/ui/Slider";
 import { NormalizedBadge } from "../NormalizedBadge";
 import { GroupedBadge } from "../GroupedBadge";
 

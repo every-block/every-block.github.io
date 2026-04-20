@@ -1,5 +1,5 @@
-import { useGroupStore } from "../../state/groupStore";
-import { Toggle } from "../ui/Toggle";
+import { useGroupStore } from "@/stores/group-store";
+import { Toggle } from "@/ui/Toggle";
 
 export function GroupToggle() {
   const enabled = useGroupStore((s) => s.group);

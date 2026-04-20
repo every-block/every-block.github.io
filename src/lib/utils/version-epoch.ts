@@ -1,4 +1,4 @@
-import type { Block } from "../data/types";
+import type { Block } from "@/types/domain";
 
 const NAMED_EPOCH_ORDER = [
   "Pre-Classic",

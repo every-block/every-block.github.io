@@ -1,6 +1,6 @@
-import type { Block, Vote } from "../../data/types";
-import { HueRingCard } from "../containers/charts/HueRingCard";
-import { RgbCubeCard } from "../containers/charts/RgbCubeCard";
+import type { Block, Vote } from "@/types/domain";
+import { HueRingCard } from "@/containers/charts/HueRingCard";
+import { RgbCubeCard } from "@/containers/charts/RgbCubeCard";
 
 interface Props {
   votes: Vote[];

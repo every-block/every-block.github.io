@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import type { ReactNode } from "react";
 import type { Data, Layout } from "plotly.js-dist-min";
-import { PlotlyChart } from "./PlotlyChart";
-import type { SeriesItem } from "./types";
+import { PlotlyChart } from "@/ui/charts/PlotlyChart";
+import type { SeriesItem } from "@/types/chart-items";
 
 interface Props {
   items: SeriesItem[];

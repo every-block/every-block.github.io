@@ -28,5 +28,5 @@ export interface DataBundle {
   startTime: number;
   endTime: number;
   unmatched: string[];
-  groupClassifier: import("./blockGroups").GroupClassifier;
+  groupClassifier: import("@/data/block-groups").GroupClassifier;
 }

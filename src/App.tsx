@@ -1,27 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import { loadData, preloadImages } from "./data/loadData";
-import { loadBuildInfo, type BuildInfo } from "./data/loadBuildInfo";
-import type { DataBundle, Vote } from "./data/types";
-import { useTimeStore } from "./state/timeStore";
-import { useVotesUpTo } from "./state/useVotesUpTo";
-import { usePlaybackLoop } from "./state/usePlaybackLoop";
-import { useFilterStore } from "./state/filterStore";
-import { TimeScrubber } from "./components/containers/TimeScrubber";
-import { VersionFilter } from "./components/containers/VersionFilter";
-import { NormalizeToggle } from "./components/containers/NormalizeToggle";
-import { GroupToggle } from "./components/containers/GroupToggle";
-import { LastRefreshedIndicator } from "./components/containers/LastRefreshedIndicator";
-import {
-  TabSwitcher,
-  type TabId,
-} from "./components/containers/TabSwitcher";
-import { StatsPage } from "./components/pages/StatsPage";
-import { ColorsPage } from "./components/pages/ColorsPage";
-import { LogisticsPage } from "./components/pages/LogisticsPage";
-import { cleanVersion } from "./lib/versionEpoch";
-import { EVENTS } from "./data/events";
-import type { Block } from "./data/types";
-import { PYRO_QUOTES } from "./data/quotes";
+import { loadData, preloadImages } from "@/data/load-data";
+import { loadBuildInfo, type BuildInfo } from "@/data/load-build-info";
+import type { Block, DataBundle, Vote } from "@/types/domain";
+import { useTimeStore } from "@/stores/time-store";
+import { useVotesUpTo } from "@/hooks/use-votes-up-to";
+import { usePlaybackLoop } from "@/hooks/use-playback-loop";
+import { useFilterStore } from "@/stores/filter-store";
+import { TimeScrubber } from "@/containers/TimeScrubber";
+import { VersionFilter } from "@/containers/VersionFilter";
+import { NormalizeToggle } from "@/containers/NormalizeToggle";
+import { GroupToggle } from "@/containers/GroupToggle";
+import { LastRefreshedIndicator } from "@/containers/LastRefreshedIndicator";
+import { TabSwitcher, type TabId } from "@/containers/TabSwitcher";
+import { StatsPage } from "@/pages/StatsPage";
+import { ColorsPage } from "@/pages/ColorsPage";
+import { LogisticsPage } from "@/pages/LogisticsPage";
+import { cleanVersion } from "@/utils/version-epoch";
+import { EVENTS } from "@/data/events";
+import { PYRO_QUOTES } from "@/data/quotes";
 
 const EMPTY_VOTES: Vote[] = [];
 const EMPTY_BLOCKS: Block[] = [];

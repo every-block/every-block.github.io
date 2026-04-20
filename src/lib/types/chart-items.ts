@@ -1,4 +1,4 @@
-export type Rgb = readonly [number, number, number];
+import type { Rgb } from "@/types/domain";
 
 export interface SeriesItem {
   key: string;
