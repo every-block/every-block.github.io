@@ -55,6 +55,33 @@ export function HueRingKde({
     [baseItems, bwRad, n],
   );
 
+  const staticParts = useMemo(() => {
+    const gridDeg = new Array<number>(n);
+    const wedgeColor = new Array<string>(n);
+    const wedgeWidthArr = new Array<number>(n).fill(360 / n);
+    const dTheta = 360 / n;
+    for (let i = 0; i < n; i++) {
+      gridDeg[i] = i * dTheta;
+      wedgeColor[i] = hsvToCss(gridDeg[i], 0.85, 0.95);
+    }
+    const ringTheta = new Array<number>(361);
+    const ringR = new Array<number>(361);
+    for (let i = 0; i <= 360; i++) {
+      ringTheta[i] = i;
+      ringR[i] = INNER_R;
+    }
+    const ringTrace: Data = {
+      type: "scatterpolar",
+      mode: "lines",
+      theta: ringTheta,
+      r: ringR,
+      line: { color: "#cccccc", width: 1.2 },
+      hoverinfo: "skip",
+      showlegend: false,
+    };
+    return { gridDeg, wedgeColor, wedgeWidthArr, ringTrace };
+  }, [n]);
+
   const { data, layout } = useMemo(() => {
     const itemsDensity = itemsKde.density;
     const baseDensity = baseKde?.density;
@@ -86,47 +113,26 @@ export function HueRingKde({
     }
     const span = dmax - dmin || 1;
     const rScaled = new Float64Array(plotDensity.length);
+    const wedgeR = new Array<number>(n);
     for (let i = 0; i < plotDensity.length; i++) {
-      rScaled[i] =
+      const r =
         INNER_R + ((plotDensity[i] - dmin) / span) * (OUTER_R - INNER_R);
+      rScaled[i] = r;
+      wedgeR[i] = r - INNER_R;
     }
 
-    const gridDeg = new Array<number>(n);
-    const wedgeR = new Array<number>(n);
-    const wedgeColor = new Array<string>(n);
-    const wedgeWidth = 360 / n;
-    for (let i = 0; i < n; i++) {
-      gridDeg[i] = (grid[i] * 180) / Math.PI;
-      wedgeR[i] = rScaled[i] - INNER_R;
-      wedgeColor[i] = hsvToCss(gridDeg[i], 0.85, 0.95);
-    }
+    const { gridDeg, wedgeColor, wedgeWidthArr, ringTrace } = staticParts;
 
     const wedgeTrace = {
       type: "barpolar",
       theta: gridDeg,
       r: wedgeR,
-      width: new Array(n).fill(wedgeWidth),
+      width: wedgeWidthArr,
       base: INNER_R,
       marker: { color: wedgeColor, line: { width: 0 } },
       hoverinfo: "skip",
       showlegend: false,
     } as unknown as Data;
-
-    const ringTheta = new Array<number>(361);
-    const ringR = new Array<number>(361);
-    for (let i = 0; i <= 360; i++) {
-      ringTheta[i] = i;
-      ringR[i] = INNER_R;
-    }
-    const ringTrace: Data = {
-      type: "scatterpolar",
-      mode: "lines",
-      theta: ringTheta,
-      r: ringR,
-      line: { color: "#cccccc", width: 1.2 },
-      hoverinfo: "skip",
-      showlegend: false,
-    };
 
     const dotSource = mode === "base" && baseItems ? baseItems : items;
     const dotTheta = dotSource.map((i) => i.hueDeg);
@@ -191,7 +197,7 @@ export function HueRingKde({
     };
 
     return { data: [wedgeTrace, ringTrace, dotTrace], layout };
-  }, [itemsKde, baseKde, mode, items, baseItems, n, title]);
+  }, [itemsKde, baseKde, mode, items, baseItems, n, title, staticParts]);
 
   const canShowBase = !!baseItems;
   const normalizedLocked = mode === "normalized";

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import type { Block, Rgb, Vote } from "@/types/domain";
 import { useVotesUpTo } from "@/hooks/use-votes-up-to";
 import { useSaturationStore } from "@/stores/saturation-store";
@@ -18,96 +18,141 @@ interface Props {
   n?: number;
 }
 
+interface BlockAnnot {
+  key: string;
+  name: string;
+  rgb: Rgb;
+  hsv: { h: number; s: number; v: number };
+  color: string;
+  groupKey?: string;
+  groupName?: string;
+}
+
+interface Entity {
+  key: string;
+  name: string;
+  hsv: { h: number; s: number; v: number };
+  color: string;
+  weight: number;
+  metaPrefix: string;
+}
+
+function toHuePoint(e: Entity): HuePoint {
+  return {
+    key: e.key,
+    label: e.name,
+    hueDeg: e.hsv.h,
+    color: e.color,
+    weight: e.weight,
+    meta: `${e.metaPrefix} - ${e.hsv.h.toFixed(0)}°`,
+  };
+}
+
 export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
   const slice = useVotesUpTo(allVotes);
-  const minSat = useSaturationStore((s) => s.minSaturation);
+  const minSatLive = useSaturationStore((s) => s.minSaturation);
+  const minSat = useDeferredValue(minSatLive);
   const setMinSaturation = useSaturationStore((s) => s.setMinSaturation);
   const normalize = useNormalizeStore((s) => s.normalize);
   const group = useGroupStore((s) => s.group);
   const [localMode, setLocalMode] = useState<HueRingMode>("items");
 
-  const baseItems = useMemo<HuePoint[]>(() => {
-    const items: HuePoint[] = [];
+  const blockAnnots = useMemo<BlockAnnot[]>(
+    () =>
+      blocks.map((b) => ({
+        key: b.key,
+        name: b.name,
+        rgb: b.rgb,
+        hsv: rgbToHsv(b.rgb),
+        color: rgbToCss(b.rgb),
+        groupKey: b.groupKey,
+        groupName: b.groupName,
+      })),
+    [blocks],
+  );
+
+  const annotByKey = useMemo(() => {
+    const m = new Map<string, BlockAnnot>();
+    for (const a of blockAnnots) m.set(a.key, a);
+    return m;
+  }, [blockAnnots]);
+
+  const baseEntities = useMemo<Entity[]>(() => {
+    const entities: Entity[] = [];
     if (group) {
       type Accum = {
-        r: number;
-        g: number;
-        b: number;
+        rSum: number;
+        gSum: number;
+        bSum: number;
         n: number;
         name: string;
         key: string;
       };
       const groups = new Map<string, Accum>();
-      const ungrouped: Block[] = [];
-      for (const b of blocks) {
-        if (b.groupKey) {
-          const a = groups.get(b.groupKey);
-          if (a) {
-            a.r += b.rgb[0];
-            a.g += b.rgb[1];
-            a.b += b.rgb[2];
-            a.n += 1;
+      const ungrouped: BlockAnnot[] = [];
+      for (const a of blockAnnots) {
+        if (a.groupKey) {
+          const existing = groups.get(a.groupKey);
+          if (existing) {
+            existing.rSum += a.rgb[0];
+            existing.gSum += a.rgb[1];
+            existing.bSum += a.rgb[2];
+            existing.n += 1;
           } else {
-            groups.set(b.groupKey, {
-              r: b.rgb[0],
-              g: b.rgb[1],
-              b: b.rgb[2],
+            groups.set(a.groupKey, {
+              rSum: a.rgb[0],
+              gSum: a.rgb[1],
+              bSum: a.rgb[2],
               n: 1,
-              name: b.groupName ?? b.name,
-              key: b.groupKey,
+              name: a.groupName ?? a.name,
+              key: a.groupKey,
             });
           }
         } else {
-          ungrouped.push(b);
+          ungrouped.push(a);
         }
       }
-      for (const a of groups.values()) {
+      for (const g of groups.values()) {
         const rgb: Rgb = [
-          Math.round(a.r / a.n),
-          Math.round(a.g / a.n),
-          Math.round(a.b / a.n),
+          Math.round(g.rSum / g.n),
+          Math.round(g.gSum / g.n),
+          Math.round(g.bSum / g.n),
         ];
-        const hsv = rgbToHsv(rgb);
-        if (hsv.s < minSat) continue;
-        items.push({
-          key: a.key,
-          label: a.name,
-          hueDeg: hsv.h,
+        entities.push({
+          key: g.key,
+          name: g.name,
+          hsv: rgbToHsv(rgb),
           color: rgbToCss(rgb),
-          weight: a.n,
-          meta: `${a.name} - ${a.n} variant${a.n === 1 ? "" : "s"} - ${hsv.h.toFixed(0)}°`,
+          weight: g.n,
+          metaPrefix: `${g.name} - ${g.n} variant${g.n === 1 ? "" : "s"}`,
         });
       }
-      for (const b of ungrouped) {
-        const hsv = rgbToHsv(b.rgb);
-        if (hsv.s < minSat) continue;
-        items.push({
-          key: b.key,
-          label: b.name,
-          hueDeg: hsv.h,
-          color: rgbToCss(b.rgb),
+      for (const a of ungrouped) {
+        entities.push({
+          key: a.key,
+          name: a.name,
+          hsv: a.hsv,
+          color: a.color,
           weight: 1,
-          meta: `${b.name} - ${hsv.h.toFixed(0)}°`,
+          metaPrefix: a.name,
         });
       }
     } else {
-      for (const b of blocks) {
-        const hsv = rgbToHsv(b.rgb);
-        if (hsv.s < minSat) continue;
-        items.push({
-          key: b.key,
-          label: b.name,
-          hueDeg: hsv.h,
-          color: rgbToCss(b.rgb),
+      for (const a of blockAnnots) {
+        entities.push({
+          key: a.key,
+          name: a.name,
+          hsv: a.hsv,
+          color: a.color,
           weight: 1,
-          meta: `${b.name} - ${hsv.h.toFixed(0)}°`,
+          metaPrefix: a.name,
         });
       }
     }
-    return items;
-  }, [blocks, minSat, group]);
+    return entities;
+  }, [blockAnnots, group]);
 
-  const items = useMemo<HuePoint[]>(() => {
+  const itemEntities = useMemo<Entity[]>(() => {
     type Accum = {
       key: string;
       name: string;
@@ -118,14 +163,12 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
     };
     const byEntity = new Map<string, Accum>();
     for (const v of slice.votes) {
-      const hsv = rgbToHsv(v.block.rgb);
-      if (hsv.s < minSat) continue;
-      const isGroup = group && !!v.block.groupKey;
-      const id = isGroup ? (v.block.groupKey as string) : v.block.key;
-      const nm = isGroup
-        ? (v.block.groupName ?? v.block.name)
-        : v.block.name;
-      const [r, g, b] = v.block.rgb;
+      const annot = annotByKey.get(v.block.key);
+      if (!annot) continue;
+      const isGroup = group && !!annot.groupKey;
+      const id = isGroup ? (annot.groupKey as string) : annot.key;
+      const nm = isGroup ? (annot.groupName ?? annot.name) : annot.name;
+      const [r, g, b] = annot.rgb;
       const existing = byEntity.get(id);
       if (existing) {
         existing.count += 1;
@@ -143,25 +186,34 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
         });
       }
     }
-    const out: HuePoint[] = [];
-    for (const it of byEntity.values()) {
+    const out: Entity[] = [];
+    for (const e of byEntity.values()) {
       const rgb: Rgb = [
-        Math.round(it.rSum / it.count),
-        Math.round(it.gSum / it.count),
-        Math.round(it.bSum / it.count),
+        Math.round(e.rSum / e.count),
+        Math.round(e.gSum / e.count),
+        Math.round(e.bSum / e.count),
       ];
-      const hsv = rgbToHsv(rgb);
       out.push({
-        key: it.key,
-        label: it.name,
-        hueDeg: hsv.h,
+        key: e.key,
+        name: e.name,
+        hsv: rgbToHsv(rgb),
         color: rgbToCss(rgb),
-        weight: it.count,
-        meta: `${it.name} - ${it.count} vote${it.count === 1 ? "" : "s"} - ${hsv.h.toFixed(0)}°`,
+        weight: e.count,
+        metaPrefix: `${e.name} - ${e.count} vote${e.count === 1 ? "" : "s"}`,
       });
     }
     return out;
-  }, [slice.count, minSat, group]);
+  }, [slice.count, group, annotByKey]);
+
+  const baseItems = useMemo<HuePoint[]>(
+    () => baseEntities.filter((e) => e.hsv.s >= minSat).map(toHuePoint),
+    [baseEntities, minSat],
+  );
+
+  const items = useMemo<HuePoint[]>(
+    () => itemEntities.filter((e) => e.hsv.s >= minSat).map(toHuePoint),
+    [itemEntities, minSat],
+  );
 
   const mode: HueRingMode = normalize ? "normalized" : localMode;
   const title = normalize
@@ -196,10 +248,10 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
         min={0}
         max={1}
         step={0.01}
-        value={minSat}
+        value={minSatLive}
         onChange={setMinSaturation}
       />
-      <span className="hue-ring-sat-value">{minSat.toFixed(2)}</span>
+      <span className="hue-ring-sat-value">{minSatLive.toFixed(2)}</span>
     </div>
   );
 
