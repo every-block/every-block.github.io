@@ -15,6 +15,8 @@ export interface MultiSelectGroup {
   options: MultiSelectOption[];
 }
 
+export type MultiSelectVariant = "popover" | "inline";
+
 interface Props {
   groups: MultiSelectGroup[];
   selected: Set<string>;
@@ -31,6 +33,7 @@ interface Props {
   flattenSingletons?: boolean;
   emptyLabel?: string;
   className?: string;
+  variant?: MultiSelectVariant;
 }
 
 type GroupState = "all" | "some" | "none";
@@ -48,8 +51,11 @@ export function MultiSelectFilter({
   flattenSingletons = true,
   emptyLabel = "No matches",
   className,
+  variant = "popover",
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const inline = variant === "inline";
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const open = inline ? true : popoverOpen;
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -67,13 +73,13 @@ export function MultiSelectFilter({
   }, [groups, selected]);
 
   useEffect(() => {
-    if (!open) return;
+    if (inline || !popoverOpen) return;
     const onDocClick = (e: MouseEvent) => {
       if (!containerRef.current) return;
-      if (!containerRef.current.contains(e.target as Node)) setOpen(false);
+      if (!containerRef.current.contains(e.target as Node)) setPopoverOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") setPopoverOpen(false);
     };
     document.addEventListener("mousedown", onDocClick);
     document.addEventListener("keydown", onKey);
@@ -81,11 +87,12 @@ export function MultiSelectFilter({
       document.removeEventListener("mousedown", onDocClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [inline, popoverOpen]);
 
   useEffect(() => {
-    if (!open) setQuery("");
-  }, [open]);
+    if (inline) return;
+    if (!popoverOpen) setQuery("");
+  }, [inline, popoverOpen]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -107,7 +114,6 @@ export function MultiSelectFilter({
     return out;
   }, [groups, normalizedQuery]);
 
-  // When searching, auto-expand any group that has matches so hits are visible.
   const isGroupExpanded = (key: string) =>
     normalizedQuery ? true : openGroups.has(key);
 
@@ -128,26 +134,37 @@ export function MultiSelectFilter({
     });
   }
 
+  const rootClass = [
+    "ui-multiselect",
+    inline ? "ui-multiselect--inline" : "",
+    className ?? "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const panelClass = inline
+    ? "ui-multiselect-panel ui-multiselect-panel--inline"
+    : "ui-multiselect-panel";
+
   return (
-    <div
-      className={`ui-multiselect${className ? ` ${className}` : ""}`}
-      ref={containerRef}
-    >
-      <button
-        type="button"
-        className={`ui-multiselect-button${open ? " is-open" : ""}`}
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-haspopup="dialog"
-      >
-        <span>{renderButtonLabel({ selectedCount, totalCount })}</span>
-        <span className="ui-multiselect-chevron" aria-hidden>
-          ▾
-        </span>
-      </button>
+    <div className={rootClass} ref={containerRef}>
+      {!inline && (
+        <button
+          type="button"
+          className={`ui-multiselect-button${open ? " is-open" : ""}`}
+          onClick={() => setPopoverOpen((o) => !o)}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+        >
+          <span>{renderButtonLabel({ selectedCount, totalCount })}</span>
+          <span className="ui-multiselect-chevron" aria-hidden>
+            ▾
+          </span>
+        </button>
+      )}
 
       {open && (
-        <div className="ui-multiselect-panel" role="dialog">
+        <div className={panelClass} role={inline ? "group" : "dialog"}>
           {searchable && (
             <div className="ui-multiselect-search">
               <input
@@ -156,7 +173,7 @@ export function MultiSelectFilter({
                 placeholder={searchPlaceholder}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                autoFocus
+                autoFocus={!inline}
               />
             </div>
           )}

@@ -5,13 +5,15 @@ import { allVersionsInOrder, groupVersions } from "@/utils/version-epoch";
 import {
   MultiSelectFilter,
   type MultiSelectGroup,
+  type MultiSelectVariant,
 } from "@/ui/MultiSelectFilter";
 
 interface Props {
   blocks: Block[];
+  variant?: MultiSelectVariant;
 }
 
-export function VersionFilter({ blocks }: Props) {
+export function VersionFilter({ blocks, variant }: Props) {
   const epochs = useMemo(() => groupVersions(blocks), [blocks]);
   const allVersions = useMemo(() => allVersionsInOrder(blocks), [blocks]);
 
@@ -52,6 +54,7 @@ export function VersionFilter({ blocks }: Props) {
       onClearAll={() => excludeAllVersions(allVersions)}
       searchable
       searchPlaceholder="Search versions…"
+      variant={variant}
       renderButtonLabel={({ selectedCount, totalCount }) => {
         if (selectedCount === totalCount) return `All versions (${totalCount})`;
         if (selectedCount === 0) return "No versions";

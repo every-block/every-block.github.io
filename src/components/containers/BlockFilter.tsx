@@ -4,14 +4,16 @@ import { useFilterStore } from "@/stores/filter-store";
 import {
   MultiSelectFilter,
   type MultiSelectGroup,
+  type MultiSelectVariant,
 } from "@/ui/MultiSelectFilter";
 import { ItemSprite } from "@/ui/ItemSprite";
 
 interface Props {
   blocks: Block[];
+  variant?: MultiSelectVariant;
 }
 
-export function BlockFilter({ blocks }: Props) {
+export function BlockFilter({ blocks, variant }: Props) {
   const excluded = useFilterStore((s) => s.excludedBlockKeys);
   const toggleBlockKey = useFilterStore((s) => s.toggleBlockKey);
   const setBlockKeysIncluded = useFilterStore((s) => s.setBlockKeysIncluded);
@@ -93,6 +95,7 @@ export function BlockFilter({ blocks }: Props) {
       onClearAll={() => excludeAllBlocks(allKeys)}
       searchable
       searchPlaceholder="Search blocks…"
+      variant={variant}
       renderButtonLabel={({ selectedCount, totalCount }) => {
         if (selectedCount === totalCount) return `All blocks (${totalCount})`;
         if (selectedCount === 0) return "No blocks";
