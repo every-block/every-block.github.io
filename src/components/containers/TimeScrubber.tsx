@@ -2,6 +2,33 @@ import { SPEED_OPTIONS, useTimeStore, type Speed } from "@/stores/time-store";
 import { EVENTS, type TimelineEvent } from "@/data/events";
 import { Slider } from "@/ui/Slider";
 
+function ScrubberIconRestart() {
+  return (
+    <svg className="scrubber-btn-icon" viewBox="0 0 24 24" aria-hidden>
+      <path
+        fill="currentColor"
+        d="M4 5h2v14H4V5zM6 12l12-6v12L6 12z"
+      />
+    </svg>
+  );
+}
+
+function ScrubberIconPlay() {
+  return (
+    <svg className="scrubber-btn-icon" viewBox="0 0 24 24" aria-hidden>
+      <path fill="currentColor" d="M8 5v14l11-7-11-7z" />
+    </svg>
+  );
+}
+
+function ScrubberIconPause() {
+  return (
+    <svg className="scrubber-btn-icon" viewBox="0 0 24 24" aria-hidden>
+      <path fill="currentColor" d="M6 5h4v14H6V5zm8 0h4v14h-4V5z" />
+    </svg>
+  );
+}
+
 interface Props {
   voteCount: number;
   totalVotes: number;
@@ -47,7 +74,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         title="Restart"
         aria-label="Restart"
       >
-        ⏮
+        <ScrubberIconRestart />
       </button>
       <button
         className="scrubber-btn scrubber-btn--primary"
@@ -56,8 +83,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         title={isPlaying ? "Pause" : "Play"}
         aria-label={isPlaying ? "Pause" : "Play"}
       >
-        {isPlaying ? "⏸" : "⯈"}
-   
+        {isPlaying ? <ScrubberIconPause /> : <ScrubberIconPlay />}
       </button>
 
       <div className="scrubber-time">
