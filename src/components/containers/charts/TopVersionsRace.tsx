@@ -97,6 +97,7 @@ export function TopVersionsRace({ allVotes, blocks }: Props) {
     <HBarRace
       items={items}
       title={`votes by version${normalize ? " (per block)" : ""}`}
+      showRank
       formatValue={formatValue}
       badge={
         normalize ? (

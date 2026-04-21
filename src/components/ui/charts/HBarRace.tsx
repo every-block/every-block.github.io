@@ -21,6 +21,7 @@ interface Props {
   rowGap?: number;
   transitionMs?: number;
   insideLabelMinPct?: number;
+  showRank?: boolean;
   extraControls?: ReactNode;
 }
 
@@ -40,6 +41,7 @@ export function HBarRace({
   rowGap = 4,
   transitionMs = 350,
   insideLabelMinPct = 18,
+  showRank = false,
   extraControls,
 }: Props) {
   const [nInput, setNInput] = useState<string>(n != null ? String(n) : "");
@@ -111,6 +113,7 @@ export function HBarRace({
             const pct = (entry.value / maxValue) * 100;
             const labelInside = pct >= insideLabelMinPct;
             const text = formatValue ? formatValue(entry) : String(entry.value);
+            const displayRank = mode === "top" ? rank + 1 : effectiveN - rank;
             return (
               <div
                 key={entry.key}
@@ -132,6 +135,9 @@ export function HBarRace({
                 >
                   {labelInside && (
                     <>
+                      {showRank && (
+                        <span className="hbar-rank">#{displayRank}</span>
+                      )}
                       <span className="hbar-label">{entry.label}</span>
                       <span className="hbar-count">{text}</span>
                     </>
@@ -139,6 +145,9 @@ export function HBarRace({
                 </div>
                 {!labelInside && (
                   <div className="hbar-overflow-label">
+                    {showRank && (
+                      <span className="hbar-rank">#{displayRank}</span>
+                    )}
                     <span className="hbar-label">{entry.label}</span>
                     <span className="hbar-count">{text}</span>
                   </div>

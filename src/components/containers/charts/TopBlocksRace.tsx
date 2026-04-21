@@ -151,6 +151,7 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
       n={n}
       onNChange={setN}
       showNControl
+      showRank
       formatValue={(e) => String(e.value)}
       extraControls={
         <Toggle
