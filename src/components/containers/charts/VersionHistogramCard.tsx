@@ -101,7 +101,7 @@ export function VersionHistogramCard({ allVotes, blocks }: Props) {
       customdata={customdata}
       badge={
         normalize ? (
-          <NormalizedBadge description="Each bar's height is votes ÷ number of blocks released in that version. Versions are pinned in chronological order so heights are directly comparable across the timeline." />
+          <NormalizedBadge description="Each bar's height is votes ÷ number of blocks released in that version, surfacing versions whose blocks punched above their weight." />
         ) : undefined
       }
     />

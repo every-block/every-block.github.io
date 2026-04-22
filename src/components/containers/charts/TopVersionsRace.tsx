@@ -105,7 +105,7 @@ export function TopVersionsRace({ allVotes, blocks }: Props) {
       formatValue={formatValue}
       badge={
         normalize ? (
-          <NormalizedBadge description="Each bar's length is votes ÷ number of blocks released in that version, surfacing versions whose blocks punched above their weight regardless of how many were added. The bar's color is still the vote-weighted average of its blocks' RGB." />
+          <NormalizedBadge description="Each bar's length is votes ÷ number of blocks released in that version, surfacing versions whose blocks punched above their weight." />
         ) : undefined
       }
     />

@@ -175,7 +175,7 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
       }
       badge={
         group ? (
-          <GroupedBadge description="Variant blocks are merged into canonical groups (e.g. Stone Slab + Stone Brick Stairs into Stone). Each group's bar color is the vote-weighted RGB average across its members." />
+          <GroupedBadge description="Variant blocks are merged into canonical groups (e.g. Stone Slab + Stone Brick Stairs into Stone)." />
         ) : undefined
       }
     />

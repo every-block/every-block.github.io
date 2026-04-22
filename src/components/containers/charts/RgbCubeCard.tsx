@@ -158,7 +158,7 @@ export function RgbCubeCard({
       )}
       badge={
         group ? (
-          <GroupedBadge description="Sprites are placed at the vote-weighted average RGB of each canonical group rather than per-block. Group icons use the representative member's image (e.g. Oak Planks for Oak); Flowers/Coral fall back to a colored swatch since they have no single representative." />
+          <GroupedBadge description="Sprites are placed at the vote-weighted average RGB of each canonical group rather than per-block." />
         ) : undefined
       }
     />

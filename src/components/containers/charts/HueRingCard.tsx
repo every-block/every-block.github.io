@@ -220,10 +220,10 @@ export function HueRingCard({ allVotes, blocks, bwDeg, n }: Props) {
   const badge = (
     <>
       {normalize && (
-        <NormalizedBadge description="The vote-density at each hue is divided by the dataset's natural hue density (one weight-1 sample per block, or per group when GROUP is also on). Radii now show how much each hue overperformed its share of the block list, rather than absolute popularity." />
+        <NormalizedBadge description="The vote-density at each hue is divided by the dataset's natural hue density. Radii now show how much each hue overperformed its baseline." />
       )}
       {group && (
-        <GroupedBadge description="Each dot/wedge represents a canonical group rather than an individual block. The group's hue is the vote-weighted RGB average of its members up to the cursor, so it drifts as different variants accumulate votes." />
+        <GroupedBadge description="Each group's hue is the vote-weighted RGB average of its members up to the cursor, so it drifts as different variants accumulate votes." />
       )}
     </>
   );
