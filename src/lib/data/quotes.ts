@@ -3,5 +3,6 @@ export const PYRO_QUOTES: readonly string[] = [
   "I might be the mayor of density",
   "My grandma was a Treemap",
   "Founder of Blockheed Martin Corp",
-  "MADE 100% BY ME!"
+  "MADE 100% BY ME!",
+  "Data-Scythe lol",
 ];
