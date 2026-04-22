@@ -124,12 +124,23 @@ export function TopBlocksRace({ allVotes, blocks, defaultN = 20 }: Props) {
         textColor: readableTextOn(rgb),
       });
     }
-    out.sort((a, b) =>
-      mode === "top"
-        ? b.value - a.value || (a.label < b.label ? -1 : 1)
-        : a.value - b.value || (a.label < b.label ? -1 : 1),
+    const byValueDesc = [...out].sort((a, b) =>
+      b.value - a.value || (a.label < b.label ? -1 : 1),
     );
-    return out.slice(0, n);
+    const globalRankByKey = new Map(
+      byValueDesc.map((it, i) => [it.key, i + 1]),
+    );
+    out.sort((a, b) => {
+      const ra = globalRankByKey.get(a.key) ?? 0;
+      const rb = globalRankByKey.get(b.key) ?? 0;
+      if (mode === "top") {
+        return b.value - a.value || ra - rb;
+      }
+      return a.value - b.value || rb - ra;
+    });
+    return out
+      .slice(0, n)
+      .map((it) => ({ ...it, globalRank: globalRankByKey.get(it.key)! }));
   }, [slice.count, n, mode, blocks, group, materialsOnly]);
 
   const noun = materialsOnly

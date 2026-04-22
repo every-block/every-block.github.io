@@ -6,6 +6,7 @@ export interface SeriesItem {
   value: number;
   color: string;
   textColor?: string;
+  globalRank?: number;
   meta?: string;
 }
 

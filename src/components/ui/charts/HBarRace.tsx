@@ -113,7 +113,9 @@ export function HBarRace({
             const pct = (entry.value / maxValue) * 100;
             const labelInside = pct >= insideLabelMinPct;
             const text = formatValue ? formatValue(entry) : String(entry.value);
-            const displayRank = mode === "top" ? rank + 1 : effectiveN - rank;
+            const displayRank =
+              entry.globalRank ??
+              (mode === "top" ? rank + 1 : effectiveN - rank);
             return (
               <div
                 key={entry.key}

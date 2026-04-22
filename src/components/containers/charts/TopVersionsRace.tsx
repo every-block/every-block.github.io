@@ -82,7 +82,11 @@ export function TopVersionsRace({ allVotes, blocks }: Props) {
       });
     }
     out.sort((a, b) => b.value - a.value);
-    return { items: out, rawByKey: raw };
+    const withRank: SeriesItem[] = out.map((it, i) => ({
+      ...it,
+      globalRank: i + 1,
+    }));
+    return { items: withRank, rawByKey: raw };
   }, [slice.count, normalize, blocksPerVersion]);
 
   const formatValue = (entry: SeriesItem) => {
