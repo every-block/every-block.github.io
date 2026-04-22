@@ -15,7 +15,7 @@ export const EVENTS: readonly TimelineEvent[] = [
     description: "Data collection begins",
   },
   {
-    timestamp: new Date("2026-04-07T19:30:00Z").getTime(),
+    timestamp: new Date("2026-04-07T19:00:00Z").getTime(),
     label: "Reel #1",
     description: "Reel #1 advertising the form posted on Instagram",
   },
