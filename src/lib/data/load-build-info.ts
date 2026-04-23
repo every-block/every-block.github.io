@@ -5,6 +5,9 @@ export interface BuildInfo {
 const URL = "/data/build-info.json";
 
 export async function loadBuildInfo(): Promise<BuildInfo | null> {
+  if (import.meta.env.DEV) {
+    return { fetchedAt: new Date(Date.now() - 23 * 60 * 60 * 1000) };
+  }
   try {
     const res = await fetch(URL, { cache: "no-store" });
     if (!res.ok) return null;

@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+/// <reference types="vite/client" />
 import { App } from "./App";
 import "./styles.css";
 

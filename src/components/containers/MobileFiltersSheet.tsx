@@ -12,16 +12,17 @@ interface Props {
   onClose: () => void;
   blocks: Block[] | null;
   buildInfo: BuildInfo | null;
+  totalVotes: number;
 }
 
-export function MobileFiltersSheet({ open, onClose, blocks, buildInfo }: Props) {
+export function MobileFiltersSheet({ open, onClose, blocks, buildInfo, totalVotes }: Props) {
   return (
     <BottomSheet open={open} onClose={onClose} title="Filters & view">
       <div className="mobile-filters-group">
         <div className="mobile-filters-row mobile-filters-row--toggles">
           <NormalizeToggle />
           <GroupToggle />
-          <LastRefreshedIndicator buildInfo={buildInfo} />
+          <LastRefreshedIndicator buildInfo={buildInfo} totalVotes={totalVotes} />
         </div>
       </div>
       {blocks && (

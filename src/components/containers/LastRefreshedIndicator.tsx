@@ -3,9 +3,10 @@ import type { BuildInfo } from "@/data/load-build-info";
 
 interface Props {
   buildInfo: BuildInfo | null;
+  totalVotes: number;
 }
 
-export function LastRefreshedIndicator({ buildInfo }: Props) {
+export function LastRefreshedIndicator({ buildInfo, totalVotes }: Props) {
   const [, setTick] = useState(0);
   useEffect(() => {
     if (!buildInfo) return;
@@ -17,17 +18,21 @@ export function LastRefreshedIndicator({ buildInfo }: Props) {
 
   const relative = formatRelative(buildInfo.fetchedAt, new Date());
   const absolute = formatAbsolute(buildInfo.fetchedAt);
+  const fmt = (n: number) => n.toLocaleString();
 
   return (
     <div
       className="last-refreshed"
       role="status"
-      aria-label={`Data last refreshed ${relative}`}
+      aria-label={`${fmt(totalVotes)} total votes, last refreshed ${relative}`}
     >
       <ClockIcon />
       <div className="last-refreshed-tooltip" role="tooltip">
         <div className="last-refreshed-tooltip-line">
-          Data last refreshed <strong>{relative}</strong>
+          <strong>{fmt(totalVotes)}</strong> total votes!
+        </div>
+        <div className="last-refreshed-tooltip-line">
+          Last refreshed <strong>{relative}</strong> (~hourly)
         </div>
         <div className="last-refreshed-tooltip-line last-refreshed-tooltip-meta">
           {absolute}

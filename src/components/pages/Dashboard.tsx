@@ -101,7 +101,7 @@ export function Dashboard({
         </LinkButton>
       </div>
       <div className="app-header-controls">
-        <LastRefreshedIndicator buildInfo={buildInfo} />
+        <LastRefreshedIndicator buildInfo={buildInfo} totalVotes={filteredVotes.length} />
         <NormalizeToggle />
         <GroupToggle />
         {bundle && <BlockFilter blocks={bundle.blocks} />}
@@ -186,6 +186,7 @@ export function Dashboard({
           onClose={() => setFiltersOpen(false)}
           blocks={bundle?.blocks ?? null}
           buildInfo={buildInfo}
+          totalVotes={filteredVotes.length}
         />
       )}
     </div>
