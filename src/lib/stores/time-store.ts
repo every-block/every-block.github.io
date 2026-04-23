@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
-export type Speed = 0.25 | 0.5 | 1 | 2 | 4 | 10 | 50;
+export type Speed = 0.1 | 0.25 | 0.5 | 1 | 2 | 4 | 10 | 50;
 
-export const SPEED_OPTIONS: readonly Speed[] = [0.25, 0.5, 1, 2, 4, 10, 50];
+export const SPEED_OPTIONS: readonly Speed[] = [0.1, 0.25, 0.5, 1, 2, 4, 10, 50];
 
 export const BASE_PLAYTHROUGH_MS = 60_000;
 
