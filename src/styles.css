@@ -1770,7 +1770,7 @@ body,
 
   .app-header-mobile-tabs {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .app--mobile .app-main {

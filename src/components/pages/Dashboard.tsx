@@ -119,6 +119,29 @@ export function Dashboard({
       <div className="app-header-mobile-top">
         {titles}
         <div className="app-header-mobile-actions">
+          <LinkButton
+            href="https://forms.gle/VxQmxgHRhSGEvcYi6"
+            target="_blank"
+            size="sm"
+            data-umami-event="vote_cta"
+            data-umami-event-placement="mobile"
+          >
+            VOTE
+          </LinkButton>
+          <LinkButton
+            href=""
+            target="_blank"
+            size="sm"
+            tone="red"
+            disabled
+            sparkles
+          >
+            VIDEO
+          </LinkButton>
+        </div>
+      </div>
+      <div className="app-header-mobile-tabs">
+        <TabSwitcher active={activeTab} onChange={setActiveTab} />
           <button
             type="button"
             className="app-header-filters-btn"
@@ -130,19 +153,6 @@ export function Dashboard({
             <FiltersIcon />
             <span>Filters</span>
           </button>
-          <LinkButton
-            href="https://forms.gle/VxQmxgHRhSGEvcYi6"
-            target="_blank"
-            size="sm"
-            data-umami-event="vote_cta"
-            data-umami-event-placement="mobile"
-          >
-            VOTE
-          </LinkButton>
-        </div>
-      </div>
-      <div className="app-header-mobile-tabs">
-        <TabSwitcher active={activeTab} onChange={setActiveTab} />
       </div>
     </header>
   );
