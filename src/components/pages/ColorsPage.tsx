@@ -19,6 +19,14 @@ const COLORS_CHART_TABS: ReadonlyArray<{ id: ColorsChartId; label: string }> = [
   { id: "cube", label: "RGB CUBE" },
 ];
 
+const COLORS_CHART_TAB_ITEMS = COLORS_CHART_TABS.map((t) => ({
+  ...t,
+  buttonProps: {
+    "data-umami-event": "colors_chart",
+    "data-umami-event-chart": t.id,
+  },
+}));
+
 export function ColorsPage({
   votes,
   blocks,
@@ -46,7 +54,7 @@ export function ColorsPage({
       <div className="mobile-chart-picker">
         <Tabs<ColorsChartId>
           size="sm"
-          items={COLORS_CHART_TABS}
+          items={COLORS_CHART_TAB_ITEMS}
           active={mobileChart}
           onChange={setMobileChart}
           ariaLabel="Colors chart"

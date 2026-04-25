@@ -73,6 +73,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         onClick={restart}
         title="Restart"
         aria-label="Restart"
+        data-umami-event="scrubber_restart"
       >
         <ScrubberIconRestart />
       </button>
@@ -82,6 +83,7 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
         disabled={!ready}
         title={isPlaying ? "Pause" : "Play"}
         aria-label={isPlaying ? "Pause" : "Play"}
+        data-umami-event={isPlaying ? "scrubber_pause" : "scrubber_play"}
       >
         {isPlaying ? <ScrubberIconPause /> : <ScrubberIconPlay />}
       </button>
@@ -121,6 +123,8 @@ export function TimeScrubber({ voteCount, totalVotes }: Props) {
                     setCurrentTime(ev.timestamp);
                   }}
                   aria-label={`Jump to ${ev.label}: ${ev.description}`}
+                  data-umami-event="scrubber_seek"
+                  data-umami-event-source="flag"
                 >
                   <span className="scrubber-flag-label">{ev.label}</span>
                   <span className="scrubber-flag-line" />

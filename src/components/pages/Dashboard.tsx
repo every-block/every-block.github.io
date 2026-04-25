@@ -62,6 +62,7 @@ export function Dashboard({
             className="pyro-link"
             target="_blank"
             rel="noopener noreferrer"
+            data-umami-event="out_streamer"
           >
             Pyroscythe
           </a>
@@ -87,6 +88,8 @@ export function Dashboard({
         <LinkButton
           href="https://forms.gle/VxQmxgHRhSGEvcYi6"
           target="_blank"
+          data-umami-event="vote_cta"
+          data-umami-event-placement="header"
         >
           VOTE
         </LinkButton>
@@ -122,6 +125,7 @@ export function Dashboard({
             onClick={() => setFiltersOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={filtersOpen}
+            data-umami-event="filters_open"
           >
             <FiltersIcon />
             <span>Filters</span>
@@ -130,6 +134,8 @@ export function Dashboard({
             href="https://forms.gle/VxQmxgHRhSGEvcYi6"
             target="_blank"
             size="sm"
+            data-umami-event="vote_cta"
+            data-umami-event-placement="mobile"
           >
             VOTE
           </LinkButton>

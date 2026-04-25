@@ -6,6 +6,7 @@ export function GroupToggle() {
   const toggle = useGroupStore((s) => s.toggle);
   return (
     <Toggle
+      data-umami-event="view_group"
       active={enabled}
       onChange={() => toggle()}
       label="GROUP"

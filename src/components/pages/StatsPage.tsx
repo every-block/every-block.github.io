@@ -19,6 +19,14 @@ const STATS_CHART_TABS: ReadonlyArray<{ id: StatsChartId; label: string }> = [
   { id: "histogram", label: "HISTOGRAM" },
 ];
 
+const STATS_CHART_TAB_ITEMS = STATS_CHART_TABS.map((t) => ({
+  ...t,
+  buttonProps: {
+    "data-umami-event": "stats_chart",
+    "data-umami-event-chart": t.id,
+  },
+}));
+
 export function StatsPage({ votes, blocks, isNarrow }: Props) {
   const [mobileChart, setMobileChart] = useState<StatsChartId>("blocks");
 
@@ -37,7 +45,7 @@ export function StatsPage({ votes, blocks, isNarrow }: Props) {
       <div className="mobile-chart-picker">
         <Tabs<StatsChartId>
           size="sm"
-          items={STATS_CHART_TABS}
+          items={STATS_CHART_TAB_ITEMS}
           active={mobileChart}
           onChange={setMobileChart}
           ariaLabel="Stats chart"

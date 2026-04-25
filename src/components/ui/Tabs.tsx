@@ -1,18 +1,24 @@
+import type { HTMLAttributes } from "react";
+
 export interface TabItem<T extends string> {
   id: T;
   label: string;
   disabled?: boolean;
   title?: string;
+  buttonProps?: Record<string, string | number | boolean | undefined>;
 }
 
-interface Props<T extends string> {
+type TabsProps<T extends string> = {
   items: ReadonlyArray<TabItem<T>>;
   active: T;
   onChange: (id: T) => void;
   size?: "sm" | "md";
   className?: string;
   ariaLabel?: string;
-}
+} & Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children" | "onClick" | "role" | "className" | "aria-label" | "onChange"
+>;
 
 export function Tabs<T extends string>({
   items,
@@ -21,7 +27,8 @@ export function Tabs<T extends string>({
   size = "md",
   className,
   ariaLabel,
-}: Props<T>) {
+  ...divRest
+}: TabsProps<T>) {
   const rootClass = [
     "ui-tabs",
     `ui-tabs--${size}`,
@@ -30,12 +37,18 @@ export function Tabs<T extends string>({
     .filter(Boolean)
     .join(" ");
   return (
-    <div className={rootClass} role="tablist" aria-label={ariaLabel}>
+    <div
+      {...divRest}
+      className={rootClass}
+      role="tablist"
+      aria-label={ariaLabel}
+    >
       {items.map((tab) => {
         const isActive = active === tab.id;
         return (
           <button
             key={tab.id}
+            {...(tab.buttonProps ?? {})}
             type="button"
             role="tab"
             aria-selected={isActive}

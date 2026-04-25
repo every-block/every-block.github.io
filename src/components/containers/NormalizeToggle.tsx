@@ -6,6 +6,7 @@ export function NormalizeToggle() {
   const toggle = useNormalizeStore((s) => s.toggle);
   return (
     <Toggle
+      data-umami-event="view_normalize"
       active={enabled}
       onChange={() => toggle()}
       label="NORMALIZE"
