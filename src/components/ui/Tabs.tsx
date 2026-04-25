@@ -50,7 +50,7 @@ export function Tabs<T extends string>({
             className={`ui-tabs-btn${isActive ? " is-active" : ""}`}
             onClick={() => onChange(tab.id)}
           >
-            <span className="ui-tabs-label">{tab.label}</span>
+            {tab.label}
           </button>
         );
       })}
