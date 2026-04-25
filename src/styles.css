@@ -887,7 +887,13 @@ body,
 
 .ui-slider-input::-webkit-slider-runnable-track {
   height: var(--track-h);
-  background: #ddd;
+  background: linear-gradient(
+    to right,
+    #333 0%,
+    #333 var(--slider-fill-pct, 0%),
+    #ddd var(--slider-fill-pct, 0%),
+    #ddd 100%
+  );
   border-radius: calc(var(--track-h) / 2);
 }
 
@@ -927,6 +933,10 @@ body,
 
 .ui-slider-input:disabled {
   cursor: not-allowed;
+}
+
+.ui-slider-input:disabled::-webkit-slider-runnable-track {
+  background: #ddd;
 }
 
 .ui-slider-input:disabled::-webkit-slider-thumb {

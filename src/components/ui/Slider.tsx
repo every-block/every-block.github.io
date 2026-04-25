@@ -36,6 +36,10 @@ export function Slider({
   ]
     .filter(Boolean)
     .join(" ");
+  const span = max - min;
+  const fillPct = span > 0 && Number.isFinite(value) && Number.isFinite(min) && Number.isFinite(max)
+    ? ((value - min) / span) * 100
+    : 0;
   return (
     <div className={wrapClass} style={style}>
       {children}
@@ -50,6 +54,7 @@ export function Slider({
         disabled={disabled}
         aria-label={ariaLabel}
         onChange={(e) => onChange(Number(e.target.value))}
+        style={{ "--slider-fill-pct": `${fillPct}%` } as CSSProperties}
       />
     </div>
   );
