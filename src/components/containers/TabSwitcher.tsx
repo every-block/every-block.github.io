@@ -8,7 +8,7 @@ export const TABS: ReadonlyArray<{ id: TabId; label: string }> = [
   { id: "logistics", label: "LOGISTICS" },
 ];
 
-const TABS_WITH_BUTTON_PROPS = TABS.map((t) => ({
+const ITEMS = TABS.map((t) => ({
   ...t,
   buttonProps: {
     "data-umami-event": "app_section",
@@ -24,7 +24,7 @@ interface Props {
 export function TabSwitcher({ active, onChange }: Props) {
   return (
     <Tabs<TabId>
-      items={TABS_WITH_BUTTON_PROPS}
+      items={ITEMS}
       active={active}
       onChange={onChange}
       size="md"

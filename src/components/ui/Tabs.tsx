@@ -1,5 +1,3 @@
-import type { HTMLAttributes } from "react";
-
 export interface TabItem<T extends string> {
   id: T;
   label: string;
@@ -15,10 +13,7 @@ type TabsProps<T extends string> = {
   size?: "sm" | "md";
   className?: string;
   ariaLabel?: string;
-} & Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "children" | "onClick" | "role" | "className" | "aria-label" | "onChange"
->;
+};
 
 export function Tabs<T extends string>({
   items,
@@ -27,7 +22,6 @@ export function Tabs<T extends string>({
   size = "md",
   className,
   ariaLabel,
-  ...divRest
 }: TabsProps<T>) {
   const rootClass = [
     "ui-tabs",
@@ -38,7 +32,6 @@ export function Tabs<T extends string>({
     .join(" ");
   return (
     <div
-      {...divRest}
       className={rootClass}
       role="tablist"
       aria-label={ariaLabel}
@@ -57,7 +50,7 @@ export function Tabs<T extends string>({
             className={`ui-tabs-btn${isActive ? " is-active" : ""}`}
             onClick={() => onChange(tab.id)}
           >
-            {tab.label}
+            <span className="ui-tabs-label">{tab.label}</span>
           </button>
         );
       })}
