@@ -33,6 +33,9 @@ export const VOTE_REMAP: Readonly<Record<string, string>> = {
   "Red Wall Banner": "Red Banner",
   "White Wall Banner": "White Banner",
   "Yellow Wall Banner": "Yellow Banner",
+  "Torchflower Crop": "Torchflower",
+  "Potted Torchflower": "Torchflower",
+  "Pitcher Crop": "Pitcher Plant"
 };
 
 export const VOTE_REMAP_BY_KEY: ReadonlyMap<string, string> = (() => {
