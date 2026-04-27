@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { useEffect, useRef } from "react";
+import type { AnimationEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   open: boolean;
@@ -7,11 +8,34 @@ interface Props {
   title?: ReactNode;
   children: ReactNode;
   ariaLabel?: string;
+  showHandle?: boolean;
+  backdropClassName?: string;
+  centerOnDesktop?: boolean;
 }
 
-export function BottomSheet({ open, onClose, title, children, ariaLabel }: Props) {
+export function BottomSheet({
+  open,
+  onClose,
+  title,
+  children,
+  ariaLabel,
+  showHandle = true,
+  backdropClassName,
+  centerOnDesktop = false,
+}: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const lastFocusRef = useRef<HTMLElement | null>(null);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setShouldRender(true);
+      setIsExiting(false);
+    } else if (shouldRender) {
+      setIsExiting(true);
+    }
+  }, [open, shouldRender]);
 
   useEffect(() => {
     if (!open) return;
@@ -45,32 +69,52 @@ export function BottomSheet({ open, onClose, title, children, ariaLabel }: Props
   }, [open, onClose]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!shouldRender) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [open]);
+  }, [shouldRender]);
 
-  if (!open) return null;
+  const handlePanelAnimationEnd = (e: AnimationEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (!isExiting) return;
+    setShouldRender(false);
+    setIsExiting(false);
+  };
+
+  if (!shouldRender) return null;
 
   return (
-    <div className="bottom-sheet-root" role="presentation">
+    <div
+      className={[
+        "bottom-sheet-root",
+        centerOnDesktop ? "bottom-sheet-root--center-dialog" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      role="presentation"
+    >
       <div
-        className="bottom-sheet-backdrop"
+        className={["bottom-sheet-backdrop", backdropClassName ?? "", isExiting ? "bottom-sheet-backdrop--exiting" : ""]
+          .filter(Boolean)
+          .join(" ")}
         onClick={onClose}
         aria-hidden
       />
       <div
         ref={panelRef}
-        className="bottom-sheet-panel"
+        className={["bottom-sheet-panel", isExiting ? "bottom-sheet-panel--exiting" : ""]
+          .filter(Boolean)
+          .join(" ")}
+        onAnimationEnd={handlePanelAnimationEnd}
         role="dialog"
         aria-modal="true"
         aria-label={typeof title === "string" ? title : ariaLabel}
         tabIndex={-1}
       >
-        <div className="bottom-sheet-handle" aria-hidden />
+        {showHandle && <div className="bottom-sheet-handle" aria-hidden />}
         {title !== undefined && (
           <div className="bottom-sheet-header">
             <div className="bottom-sheet-title">{title}</div>

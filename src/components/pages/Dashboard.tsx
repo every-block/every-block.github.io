@@ -14,6 +14,7 @@ import { ColorsPage } from "@/pages/ColorsPage";
 import { LogisticsPage } from "@/pages/LogisticsPage";
 import { PYRO_QUOTES } from "@/data/quotes";
 import { useIsNarrow } from "@/hooks/use-is-narrow";
+import { ChangelogDialog, ChangelogOpenButton } from "@/containers/ChangelogDialog";
 import { MobileFiltersSheet } from "@/containers/MobileFiltersSheet";
 
 interface Props {
@@ -104,6 +105,7 @@ export function Dashboard({
         </LinkButton>
       </div>
       <div className="app-header-controls">
+        <ChangelogOpenButton />
         <LastRefreshedIndicator buildInfo={buildInfo} totalVotes={filteredVotes.length} />
         <NormalizeToggle />
         <GroupToggle />
@@ -142,17 +144,17 @@ export function Dashboard({
       </div>
       <div className="app-header-mobile-tabs">
         <TabSwitcher active={activeTab} onChange={setActiveTab} />
-          <button
-            type="button"
-            className="app-header-filters-btn"
-            onClick={() => setFiltersOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={filtersOpen}
-            data-umami-event="filters_open"
-          >
-            <FiltersIcon />
-            <span>Filters</span>
-          </button>
+        <button
+          type="button"
+          className="app-header-filters-btn"
+          onClick={() => setFiltersOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={filtersOpen}
+          data-umami-event="filters_open"
+        >
+          <FiltersIcon />
+          <span>Filters</span>
+        </button>
       </div>
     </header>
   );
@@ -196,13 +198,13 @@ export function Dashboard({
         />
       </footer>
 
+      <ChangelogDialog />
+
       {isNarrow && (
         <MobileFiltersSheet
           open={filtersOpen}
           onClose={() => setFiltersOpen(false)}
           blocks={bundle?.blocks ?? null}
-          buildInfo={buildInfo}
-          totalVotes={filteredVotes.length}
         />
       )}
     </div>
