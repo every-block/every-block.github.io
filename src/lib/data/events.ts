@@ -30,5 +30,11 @@ export const EVENTS: readonly TimelineEvent[] = [
     description: "Data collection for video stops here",
     default: true,
     stop: true
+  },
+  {
+    timestamp: new Date("2026-04-28T22:00:00Z").getTime(),
+    label: "Video premieres",
+    description: "Survey video premieres on youtube",
+    stop: true
   }
 ];
