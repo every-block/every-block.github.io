@@ -1,6 +1,7 @@
 {
   "water": "block/water_still",
   "lava": "block/lava_still",
+  "fire": "block/fire_0",
   "soul_fire": "block/soul_fire_0",
   "tripwire": "block/tripwire",
   "nether_portal": "block/nether_portal",
