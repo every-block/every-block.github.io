@@ -95,13 +95,12 @@ export function Dashboard({
           VOTE
         </LinkButton>
         <LinkButton
-          href=""
+          href="https://www.youtube.com/watch?v=YFnxg92K_Vw"
           target="_blank"
           tone="red"
-          disabled
           sparkles
         >
-          🍳 VIDEO COOKING..
+          WATCH VIDEO!
         </LinkButton>
       </div>
       <div className="app-header-controls">
@@ -131,11 +130,10 @@ export function Dashboard({
             VOTE
           </LinkButton>
           <LinkButton
-            href=""
+            href="https://www.youtube.com/watch?v=YFnxg92K_Vw"
             target="_blank"
             size="sm"
             tone="red"
-            disabled
             sparkles
           >
             VIDEO
